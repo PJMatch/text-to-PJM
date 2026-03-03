@@ -1,0 +1,243 @@
+{
+  "timestamp": "2026-03-03T23:57:04",
+  "args": {
+    "models": [
+      "pl_core_news_sm",
+      "pl_core_news_md",
+      "pl_core_news_lg",
+      "spacy_stanza_pl"
+    ],
+    "repeats": 20,
+    "warmup": 3,
+    "lemmatize_only": false
+  },
+  "texts_count": 10,
+  "texts": [
+    "Wczoraj jadłem obiad i oglądałem film w domu.",
+    "Jutro będę pracował nad projektem, a potem spotkam się ze znajomymi.",
+    "Nie wiem, czy to rozwiązanie będzie działało poprawnie w każdej sytuacji.",
+    "To jest test wydajności modeli spaCy dla języka polskiego.",
+    "Adam i Ewa poszli do parku, gdzie spotkali swojego przyjaciela Tomka.",
+    "Czy możesz mi powiedzieć, jak dojechać do najbliższej stacji metra?",
+    "Kiedyś marzyłem o podróży dookoła świata, ale teraz wolę zostać w domu i czytać książki.",
+    "Na stole leżały różne owoce: jabłka, pomarańcze, banany i gruszki.",
+    "W zeszłym tygodniu kupiłem nowy samochód, który jest bardzo szybki i ekonomiczny.",
+    "Mój kolega z pracy jest bardzo miły i zawsze chętnie pomaga innym, gdy mają problemy z komputerem."
+  ],
+  "results": [
+    {
+      "model": "pl_core_news_sm",
+      "pipes": "tok2vec,morphologizer,parser,lemmatizer,tagger,attribute_ruler,ner",
+      "load_s": 0.31801110000014887,
+      "mean_run_s": 0.06629684000017733,
+      "stdev_s": 0.008047279567356718,
+      "tokens_per_s": 2021.212474073298,
+      "repeats": 20,
+      "texts": 10,
+      "lemmatize_only": false
+    },
+    {
+      "model": "pl_core_news_md",
+      "pipes": "tok2vec,morphologizer,parser,lemmatizer,tagger,attribute_ruler,ner",
+      "load_s": 0.6876654000006965,
+      "mean_run_s": 0.07432432499990682,
+      "stdev_s": 0.004366790140041702,
+      "tokens_per_s": 1802.9090745212686,
+      "repeats": 20,
+      "texts": 10,
+      "lemmatize_only": false
+    },
+    {
+      "model": "pl_core_news_lg",
+      "pipes": "tok2vec,morphologizer,parser,lemmatizer,tagger,attribute_ruler,ner",
+      "load_s": 0.7124115000005986,
+      "mean_run_s": 0.06459614499981399,
+      "stdev_s": 0.0014790800353202283,
+      "tokens_per_s": 2074.427196861142,
+      "repeats": 20,
+      "texts": 10,
+      "lemmatize_only": false
+    },
+    {
+      "model": "spacy_stanza_pl",
+      "pipes": "—",
+      "load_s": 2.787099400000443,
+      "mean_run_s": 1.9351968599996325,
+      "stdev_s": 0.13250227086454094,
+      "tokens_per_s": 71.31057457380652,
+      "repeats": 20,
+      "texts": 10,
+      "lemmatize_only": false
+    }
+  ],
+  "lemma_outputs": {
+    "pl_core_news_sm": [
+      {
+        "original": "Wczoraj jadłem obiad i oglądałem film w domu.",
+        "lemmas_text": "wczoraj jadłem obiad i oglądać być film w dom"
+      },
+      {
+        "original": "Jutro będę pracował nad projektem, a potem spotkam się ze znajomymi.",
+        "lemmas_text": "jutro być pracować nad projekt a potem spotkać się z znajomy"
+      },
+      {
+        "original": "Nie wiem, czy to rozwiązanie będzie działało poprawnie w każdej sytuacji.",
+        "lemmas_text": "nie wiedzieć czy ten rozwiązanie być działać poprawnie w każdy sytuacja"
+      },
+      {
+        "original": "To jest test wydajności modeli spaCy dla języka polskiego.",
+        "lemmas_text": "to być test wydajność model spaCy dla język polski"
+      },
+      {
+        "original": "Adam i Ewa poszli do parku, gdzie spotkali swojego przyjaciela Tomka.",
+        "lemmas_text": "Adam i Ewa poszli do park gdzie spotkać swój przyjaciel Tomek"
+      },
+      {
+        "original": "Czy możesz mi powiedzieć, jak dojechać do najbliższej stacji metra?",
+        "lemmas_text": "czy móc ja powiedzieć jak dojechać do bliski stacja metro"
+      },
+      {
+        "original": "Kiedyś marzyłem o podróży dookoła świata, ale teraz wolę zostać w domu i czytać książki.",
+        "lemmas_text": "kiedyś marzyć być o podróż dookoła świat ale teraz woleć zostać w dom i czytać książka"
+      },
+      {
+        "original": "Na stole leżały różne owoce: jabłka, pomarańcze, banany i gruszki.",
+        "lemmas_text": "na stół leżeć różny owoc jabłko pomarańczy banan i gruszka"
+      },
+      {
+        "original": "W zeszłym tygodniu kupiłem nowy samochód, który jest bardzo szybki i ekonomiczny.",
+        "lemmas_text": "w zeszły tydzień kupić być nowy samochód który być bardzo szybki i ekonomiczny"
+      },
+      {
+        "original": "Mój kolega z pracy jest bardzo miły i zawsze chętnie pomaga innym, gdy mają problemy z komputerem.",
+        "lemmas_text": "mój kolega z praca być bardzo miły i zawsze chętnie pomagać inny gdy mieć problem z komputer"
+      }
+    ],
+    "pl_core_news_md": [
+      {
+        "original": "Wczoraj jadłem obiad i oglądałem film w domu.",
+        "lemmas_text": "wczoraj jadć być obiad i oglądać być film w dom"
+      },
+      {
+        "original": "Jutro będę pracował nad projektem, a potem spotkam się ze znajomymi.",
+        "lemmas_text": "jutro być pracować nad projekt a potem spotkać się z znajomy"
+      },
+      {
+        "original": "Nie wiem, czy to rozwiązanie będzie działało poprawnie w każdej sytuacji.",
+        "lemmas_text": "nie wiedzieć czy ten rozwiązanie być działać poprawnie w każdy sytuacja"
+      },
+      {
+        "original": "To jest test wydajności modeli spaCy dla języka polskiego.",
+        "lemmas_text": "to być test wydajność model spaCy dla język polski"
+      },
+      {
+        "original": "Adam i Ewa poszli do parku, gdzie spotkali swojego przyjaciela Tomka.",
+        "lemmas_text": "Adam i Ewa poszli do park gdzie spotkać swój przyjaciel Tomek"
+      },
+      {
+        "original": "Czy możesz mi powiedzieć, jak dojechać do najbliższej stacji metra?",
+        "lemmas_text": "czy móc ja powiedzieć jak dojechać do bliski stacja metro"
+      },
+      {
+        "original": "Kiedyś marzyłem o podróży dookoła świata, ale teraz wolę zostać w domu i czytać książki.",
+        "lemmas_text": "kiedyś marzyć być o podróż dookoła świat ale teraz wola zostać w dom i czytać książka"
+      },
+      {
+        "original": "Na stole leżały różne owoce: jabłka, pomarańcze, banany i gruszki.",
+        "lemmas_text": "na stół leżeć różny owoc jabłko pomarańczy banan i gruszka"
+      },
+      {
+        "original": "W zeszłym tygodniu kupiłem nowy samochód, który jest bardzo szybki i ekonomiczny.",
+        "lemmas_text": "w zeszły tydzień kupić być nowy samochód który być bardzo szybki i ekonomiczny"
+      },
+      {
+        "original": "Mój kolega z pracy jest bardzo miły i zawsze chętnie pomaga innym, gdy mają problemy z komputerem.",
+        "lemmas_text": "mój kolega z praca być bardzo miły i zawsze chętnie pomagać inny gdy mieć problem z komputer"
+      }
+    ],
+    "pl_core_news_lg": [
+      {
+        "original": "Wczoraj jadłem obiad i oglądałem film w domu.",
+        "lemmas_text": "wczoraj jadłem obiad i oglądać być film w dom"
+      },
+      {
+        "original": "Jutro będę pracował nad projektem, a potem spotkam się ze znajomymi.",
+        "lemmas_text": "jutro być pracować nad projekt a potem spotkać się z znajomy"
+      },
+      {
+        "original": "Nie wiem, czy to rozwiązanie będzie działało poprawnie w każdej sytuacji.",
+        "lemmas_text": "nie wiedzieć czy ten rozwiązanie być działać poprawnie w każdy sytuacja"
+      },
+      {
+        "original": "To jest test wydajności modeli spaCy dla języka polskiego.",
+        "lemmas_text": "to być test wydajność model spaCy dla język polski"
+      },
+      {
+        "original": "Adam i Ewa poszli do parku, gdzie spotkali swojego przyjaciela Tomka.",
+        "lemmas_text": "Adam i Ewa poszli do park gdzie spotkać swój przyjaciel Tomek"
+      },
+      {
+        "original": "Czy możesz mi powiedzieć, jak dojechać do najbliższej stacji metra?",
+        "lemmas_text": "czy móc ja powiedzieć jak dojechać do bliski stacja metro"
+      },
+      {
+        "original": "Kiedyś marzyłem o podróży dookoła świata, ale teraz wolę zostać w domu i czytać książki.",
+        "lemmas_text": "kiedyś marzyć być o podróż dookoła świat ale teraz woleć zostać w dom i czytać książka"
+      },
+      {
+        "original": "Na stole leżały różne owoce: jabłka, pomarańcze, banany i gruszki.",
+        "lemmas_text": "na stół leżeć różny owoc jabłko pomarańczy banan i gruszka"
+      },
+      {
+        "original": "W zeszłym tygodniu kupiłem nowy samochód, który jest bardzo szybki i ekonomiczny.",
+        "lemmas_text": "w zeszły tydzień kupić być nowy samochód który być bardzo szybki i ekonomiczny"
+      },
+      {
+        "original": "Mój kolega z pracy jest bardzo miły i zawsze chętnie pomaga innym, gdy mają problemy z komputerem.",
+        "lemmas_text": "mój kolega z praca być bardzo miły i zawsze chętnie pomagać inny gdy mieć problem z komputer"
+      }
+    ],
+    "spacy_stanza_pl": [
+      {
+        "original": "Wczoraj jadłem obiad i oglądałem film w domu.",
+        "lemmas_text": "wczoraj jeść być obiad i oglądać być film w dom"
+      },
+      {
+        "original": "Jutro będę pracował nad projektem, a potem spotkam się ze znajomymi.",
+        "lemmas_text": "jutro być pracować nad projekt a potem spotkać się z znajomy"
+      },
+      {
+        "original": "Nie wiem, czy to rozwiązanie będzie działało poprawnie w każdej sytuacji.",
+        "lemmas_text": "nie wiedzieć czy ten rozwiązanie być działać poprawnie w każdy sytuacja"
+      },
+      {
+        "original": "To jest test wydajności modeli spaCy dla języka polskiego.",
+        "lemmas_text": "to być test wydajność model spaja dla język polski"
+      },
+      {
+        "original": "Adam i Ewa poszli do parku, gdzie spotkali swojego przyjaciela Tomka.",
+        "lemmas_text": "Adam i Ewa pójść do park gdzie spotkać swój przyjaciel Tomek"
+      },
+      {
+        "original": "Czy możesz mi powiedzieć, jak dojechać do najbliższej stacji metra?",
+        "lemmas_text": "czy móc ja powiedzieć jak dojechać do bliski stacja metr"
+      },
+      {
+        "original": "Kiedyś marzyłem o podróży dookoła świata, ale teraz wolę zostać w domu i czytać książki.",
+        "lemmas_text": "kiedyś marzyć być o podróż dookoła świat ale teraz wola zostać w dom i czytać książka"
+      },
+      {
+        "original": "Na stole leżały różne owoce: jabłka, pomarańcze, banany i gruszki.",
+        "lemmas_text": "na stół leżeć różny owoc jabłko pomarańcz banan i gruszka"
+      },
+      {
+        "original": "W zeszłym tygodniu kupiłem nowy samochód, który jest bardzo szybki i ekonomiczny.",
+        "lemmas_text": "w zeszły tydzień kupić być nowy samochód który być bardzo szybki i ekonomiczny"
+      },
+      {
+        "original": "Mój kolega z pracy jest bardzo miły i zawsze chętnie pomaga innym, gdy mają problemy z komputerem.",
+        "lemmas_text": "mój kolega z praca być bardzo miły i zawsze chętnie pomagać inny gdy mieć problem z komputer"
+      }
+    ]
+  }
+}
