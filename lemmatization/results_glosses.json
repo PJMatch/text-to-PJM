@@ -1,14 +1,64 @@
 {
-    "glosses": [
-        "Patryk",
-        "mieć",
-        "duży",
-        "kot",
-        "i",
-        "pójść",
-        "z",
-        "on",
-        "do",
-        "weterynarz"
+    "pjm_sequence": [
+        {
+            "type": "sign",
+            "gloss": "WCZORAJ"
+        },
+        {
+            "type": "sign",
+            "gloss": "SKLEP"
+        },
+        {
+            "type": "sign",
+            "gloss": "WARSZAWA"
+        },
+        {
+            "type": "fingerspell",
+            "gloss": "MACIEK",
+            "letters": [
+                "M",
+                "A",
+                "C",
+                "I",
+                "E",
+                "K"
+            ]
+        },
+        {
+            "type": "fingerspell",
+            "gloss": "KOWALSKI",
+            "letters": [
+                "K",
+                "O",
+                "W",
+                "A",
+                "L",
+                "S",
+                "K",
+                "I"
+            ]
+        },
+        {
+            "type": "sign",
+            "gloss": "PÓJŚĆ"
+        },
+        {
+            "type": "sign",
+            "gloss": "DOM"
+        },
+        {
+            "type": "fingerspell",
+            "gloss": "ANNA",
+            "letters": [
+                "A",
+                "N",
+                "N",
+                "A"
+            ]
+        },
+        {
+            "type": "sign",
+            "gloss": "ZOSTAĆ"
+        }
     ]
 }
