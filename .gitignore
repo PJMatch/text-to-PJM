@@ -1,3 +1,20 @@
+# Python
 .venv
-films
 venv
+
+#Unreal
+Build/
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+.vs/
+*.sln
+
+Content/
+
+# Other files
+films
+
+
+
