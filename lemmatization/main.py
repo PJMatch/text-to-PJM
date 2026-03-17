@@ -9,15 +9,154 @@ logging.getLogger('stanza').setLevel(logging.ERROR)
 
 nlp = spacy_stanza.load_pipeline("pl")
 
-text = "Czemu nie poszedłeś do sklepu kupić jabłka?" \
-       "Jutro będzie padać!" \
-       "Szczecin jest pięknym miastem."
+text = "Jutro będzie padać."  # Example input text
 doc = nlp(text)
 
-pjm_sentences = []
+clauses = []
 
-# Proper nouns that have equivalents in PJM
+# Proper nouns that have equivalents in PJM (no need to spell)
 exeptions = ["WARSZAWA", "FACEBOOK", "POLSKA", "YOUTUBE"]
+
+QUESTION_WORDS = {
+    "czy", "kto", "co", "komu", "czemu", "gdzie", "dokąd",
+    "skąd", "kiedy", "jak", "jaki", "jaka", "jakie", "jakim", 
+    "dlaczego", "ile", "ilu", "który", "która", "które"
+}
+
+QUESTION_PATTERNS = [
+    ["po", "co"],
+    ["w", "jaki", "sposób"],
+    ["z", "jaki", "powód"],
+    ["w", "jaki", "cel"],
+    ["z", "jaki", "przyczyna"]
+]
+
+def is_question(sentence):
+    # check if sentence ends with a question mark
+    if sentence.text.strip().endswith("?"):
+        return True
+
+    tokens = [t for t in sentence if not t.is_punct]
+    if not tokens:
+        return False
+    
+    # check if the first token is a question word
+    first_token = tokens[0].lemma_.lower()
+
+    if first_token in QUESTION_WORDS:
+        return True
+    
+    # check for specific question patterns (e.g. "po co", "w jaki sposób")
+    lemmas = [t.lemma_.lower() for t in tokens]
+
+    for pattern in QUESTION_PATTERNS:
+        if lemmas[:len(pattern)] == pattern:
+            return True
+    
+    return False
+
+def is_negative(sentence):
+    for token in sentence:
+        if token.lemma_.lower() == "nie":
+            return True
+
+        # check for negative polarity in morphological features
+        if "Polarity=Neg" in str(token.morph):
+            return True
+
+    return False
+
+def classify_sentence(sentence):
+    if is_question(sentence):
+        return "question" # pytajace
+    elif sentence.text.strip().endswith("!"):
+        return "exclamation" # wykrzyknikowe
+    elif is_negative(sentence):
+        return "negation" # przeczace
+    else:
+        return "statement" # oznajmujace
+    
+def get_tense(token):
+    if "Past" in token.morph.get("Tense", []):
+        return "past"
+    elif "Fut" in token.morph.get("Tense", []):
+        return "future"
+    return "present"
+    
+def split_into_clauses(sentence):
+    clause_roots = []
+
+    for token in sentence:
+        if token.dep_ == "root":
+            clause_roots.append(token)
+
+        elif token.dep_ == "conj":
+            clause_roots.append(token)
+
+    return clause_roots
+
+def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers):
+    for child in token.children:
+        if child.is_punct or child.pos_ in ("ADP", "CCONJ", "SCONJ", "PART"):
+            continue
+
+        # Subjects (who/what performs the action)
+        if child.dep_.startswith("nsubj") or child.dep_ == "csubj":
+            subjects.extend(get_noun_phrase(child))
+
+        # Objects (whom/what)
+        elif child.dep_.startswith("obj") or child.dep_ == "iobj" or child.dep_ == "obl:arg":
+            objects.extend(get_noun_phrase(child))
+
+        # Adverbials (where/when)
+        elif child.dep_.startswith("obl") or child.dep_ == "advmod":
+            adverbials.extend(get_noun_phrase(child))   
+
+        elif child.dep_ in ("amod", "nmod", "det", "nummod"):
+            predicate_modifiers.extend(get_noun_phrase(child))
+
+        # analize xcomp (open clausal complement) as object - e.g. "lubi jechać" -> "jechać" is object of "lubi"
+        elif child.dep_ == "xcomp" and child.pos_ in ("VERB", "AUX"):
+            objects.append(parse_token_for_json(child))
+            collect_dependents(child, subjects, objects, adverbials, predicate_modifiers)
+
+def build_clause_pjm(token):    
+    subjects = []
+    objects = []
+    adverbials = []
+    predicate_modifiers = []
+
+    collect_dependents(token, subjects, objects, adverbials, predicate_modifiers)
+
+    main_verb_data = parse_token_for_json(token)
+    tense = get_tense(token)
+
+    for child in token.children:
+        if child.dep_.startswith("aux"):
+            aux_tense = get_tense(child)
+            if aux_tense != "present":
+                tense = aux_tense
+
+    if tense != "present":
+        main_verb_data["tense"] = tense
+
+    is_negated = False
+    if token.lemma_.lower() == "nie" or "Neg" in token.morph.get("Polarity", []):
+        is_negated = True
+
+    for child in token.children:
+        if child.lemma_.lower() == "nie" or "Neg" in child.morph.get("Polarity", []):
+            is_negated = True
+            break
+
+    if is_negated:
+        main_verb_data["is_negated"] = True
+    # Ordering the glosses: Adverbial -> Subject -> Object -> Verb
+    verb_element = [main_verb_data] + predicate_modifiers
+    clause_pjm = adverbials + subjects + objects + verb_element
+    
+
+    return clause_pjm
 
 def parse_token_for_json(token):
     """Determines if the token should be a sign or spelled out, and checks for plurals"""
@@ -56,95 +195,36 @@ def get_noun_phrase(head_token):
 
 # Main loop building the sentence
 for sent in doc.sents:
-    
-    # Determine sentence type
-    sentence_type = "statement"
-    if "?" in sent.text:
-        sentence_type = "question"
-    elif "!" in sent.text:
-        sentence_type = "exclamation"
-        
-    sentence_sequence = []
-    
-    for token in sent:
-        is_main_verb = token.pos_ in ("VERB", "AUX") and not token.dep_.startswith("aux") and token.dep_ != "cop"
-        is_nominal_predicate = any(child.dep_ == "cop" for child in token.children)
-        
-        if is_main_verb or is_nominal_predicate:
-            subjects = []
-            objects = []
-            adverbials = []
-            copula_verb = []
-            predicate_modifiers = []
-            
-            is_negated = False
-            verb_tense = "present"
-            
-            if "Past" in token.morph.get("Tense", []):
-                verb_tense = "past"
-            elif "Fut" in token.morph.get("Tense", []):
-                verb_tense = "future"
-            
-            for child in token.children:
-                if "Neg" in child.morph.get("Polarity", []):
-                    is_negated = True
-                    continue
-                
-                # Check for auxiliary verbs that carry tense
-                if child.dep_.startswith("aux"):
-                    if "Past" in child.morph.get("Tense", []):
-                        verb_tense = "past"
-                    elif "Fut" in child.morph.get("Tense", []):
-                        verb_tense = "future"
-                    continue
-                
-                if child.is_punct or child.pos_ in ("ADP", "CCONJ", "SCONJ", "PART"):
-                    continue
-                
-                # Copula verbs are treated as separate signs that can carry tense information
-                if child.dep_ == "cop":
-                    cop_data = parse_token_for_json(child)
-                    if "Past" in child.morph.get("Tense", []):
-                        cop_data["tense"] = "past"
-                    elif "Fut" in child.morph.get("Tense", []):
-                        cop_data["tense"] = "future"
-                        
-                    copula_verb.append(cop_data)
-                    continue
-                    
-                if child.dep_.startswith("nsubj") or child.dep_ == "csubj":
-                    subjects.extend(get_noun_phrase(child))
-                    
-                elif child.dep_.startswith("obj") or child.dep_ == "iobj" or child.dep_ == "obl:arg":
-                    objects.extend(get_noun_phrase(child))
-                    
-                elif child.dep_.startswith("obl") or child.dep_ == "advmod":
-                    adverbials.extend(get_noun_phrase(child))
-                    
-                elif child.dep_ in ("amod", "nmod", "det", "nummod"):
-                    predicate_modifiers.extend(get_noun_phrase(child))
-            
-            main_verb_data = parse_token_for_json(token)
-            
-            if is_negated:
-                main_verb_data["is_negated"] = True
-                
-            if verb_tense != "present":
-                main_verb_data["tense"] = verb_tense
-            
-            # Ordering the glosses: Adverbial -> Subject -> Object -> Copula -> Noun/Verb -> Adjective
-            verb_element = copula_verb + [main_verb_data] + predicate_modifiers
-            pjm_order = adverbials + subjects + objects + verb_element
-            sentence_sequence.extend(pjm_order)
+    clause_roots = split_into_clauses(sent)
 
-    if len(sentence_sequence) > 0:
-        pjm_sentences.append({
-            "sentence_type": sentence_type,
-            "pjm_sequence": sentence_sequence
+    for root in clause_roots:
+        clause_text_tokens = list(root.subtree)
+        clause_text = " ".join(token.text for token in clause_text_tokens)
+
+        clause_doc = nlp(clause_text)
+        clause_sentence = list(clause_doc.sents)[0]
+
+        clause_type = classify_sentence(clause_sentence)
+        clause_root = None
+
+        for token in clause_sentence:
+            if token.dep_ == "root":
+                clause_root = token
+                break
+
+        if clause_root is None:
+            continue
+
+        clause_pjm = build_clause_pjm(clause_root)
+
+        clauses.append({
+            "sentence_type": clause_type,
+            "pjm_sequence": clause_pjm
         })
+            
 
 data = {
-    "sentences": pjm_sentences
+    "clauses": clauses
 }
 
 with open("results_glosses.json", "w", encoding="utf-8") as file:
