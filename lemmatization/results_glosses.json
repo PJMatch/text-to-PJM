@@ -1,64 +1,77 @@
 {
-    "pjm_sequence": [
+    "sentences": [
         {
-            "type": "sign",
-            "gloss": "WCZORAJ"
-        },
-        {
-            "type": "sign",
-            "gloss": "SKLEP"
-        },
-        {
-            "type": "sign",
-            "gloss": "WARSZAWA"
-        },
-        {
-            "type": "fingerspell",
-            "gloss": "MACIEK",
-            "letters": [
-                "M",
-                "A",
-                "C",
-                "I",
-                "E",
-                "K"
+            "sentence_type": "question",
+            "pjm_sequence": [
+                {
+                    "type": "sign",
+                    "gloss": "CZEMU"
+                },
+                {
+                    "type": "sign",
+                    "gloss": "PÓJŚĆ",
+                    "is_negated": true,
+                    "tense": "past"
+                },
+                {
+                    "type": "sign",
+                    "gloss": "SKLEP"
+                },
+                {
+                    "type": "sign",
+                    "gloss": "JABŁKO",
+                    "is_plural": true
+                },
+                {
+                    "type": "sign",
+                    "gloss": "KUPIĆ"
+                }
             ]
         },
         {
-            "type": "fingerspell",
-            "gloss": "KOWALSKI",
-            "letters": [
-                "K",
-                "O",
-                "W",
-                "A",
-                "L",
-                "S",
-                "K",
-                "I"
+            "sentence_type": "exclamation",
+            "pjm_sequence": [
+                {
+                    "type": "sign",
+                    "gloss": "JUTRO"
+                },
+                {
+                    "type": "sign",
+                    "gloss": "PADAĆ",
+                    "tense": "future"
+                }
             ]
         },
         {
-            "type": "sign",
-            "gloss": "PÓJŚĆ"
-        },
-        {
-            "type": "sign",
-            "gloss": "DOM"
-        },
-        {
-            "type": "fingerspell",
-            "gloss": "ANNA",
-            "letters": [
-                "A",
-                "N",
-                "N",
-                "A"
+            "sentence_type": "statement",
+            "pjm_sequence": [
+                {
+                    "type": "fingerspell",
+                    "gloss": "SZCZECIN",
+                    "letters": [
+                        "S",
+                        "Z",
+                        "C",
+                        "Z",
+                        "E",
+                        "C",
+                        "I",
+                        "N"
+                    ]
+                },
+                {
+                    "type": "sign",
+                    "gloss": "BYĆ"
+                },
+                {
+                    "type": "sign",
+                    "gloss": "MIASTO"
+                },
+                {
+                    "type": "sign",
+                    "gloss": "PIĘKNY"
+                }
             ]
-        },
-        {
-            "type": "sign",
-            "gloss": "ZOSTAĆ"
         }
     ]
 }
