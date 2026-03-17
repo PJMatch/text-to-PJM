@@ -1,5 +1,4 @@
-# Podsumowanie pracy grupy projektowej  
-## odpowiedzialnej za zamianę text-to-PJM na 3 tydzień
+# Podsumowanie pracy grupy projektowej odpowiedzialnej za zamianę text-to-PJM na 3 tydzień
 
 ## Podsumowanie dotychczasowych prac
 
