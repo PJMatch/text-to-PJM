@@ -9,7 +9,7 @@ logging.getLogger('stanza').setLevel(logging.ERROR)
 
 nlp = spacy_stanza.load_pipeline("pl")
 
-text = "Jutro będzie padać."  # Example input text
+text = "jestem w domu i nie oglądam meczu, a babcia i dziadek gotują obiad."
 doc = nlp(text)
 
 clauses = []
@@ -91,7 +91,8 @@ def split_into_clauses(sentence):
             clause_roots.append(token)
 
         elif token.dep_ == "conj":
-            clause_roots.append(token)
+            if token.pos_ in ("VERB", "AUX"):
+                clause_roots.append(token)
 
     return clause_roots
 
@@ -112,10 +113,10 @@ def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers
         elif child.dep_.startswith("obl") or child.dep_ == "advmod":
             adverbials.extend(get_noun_phrase(child))   
 
+        # Predicate modifiers
         elif child.dep_ in ("amod", "nmod", "det", "nummod"):
             predicate_modifiers.extend(get_noun_phrase(child))
 
-        # analize xcomp (open clausal complement) as object - e.g. "lubi jechać" -> "jechać" is object of "lubi"
         elif child.dep_ == "xcomp" and child.pos_ in ("VERB", "AUX"):
             objects.append(parse_token_for_json(child))
             collect_dependents(child, subjects, objects, adverbials, predicate_modifiers)
@@ -185,10 +186,12 @@ def get_noun_phrase(head_token):
     elements = [parse_token_for_json(head_token)]
     
     for sub in head_token.children:
-        if sub.is_punct or sub.pos_ in ("ADP", "CCONJ", "SCONJ", "PART", "VERB", "AUX"):
+        # Skip punctuation and irrelevant parts of speech
+        if sub.is_punct or sub.pos_ in ("ADP", "CCONJ", "SCONJ", "PART"):
             continue
-            
-        if sub.dep_ in ("flat", "appos", "nmod", "amod", "det", "nummod"):
+
+        # Only include modifiers that are relevant for noun phrases
+        if sub.dep_ in ("flat", "appos", "nmod", "amod", "det", "nummod", "conj"):
             elements.extend(get_noun_phrase(sub))
             
     return elements

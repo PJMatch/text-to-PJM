@@ -1,44 +1,29 @@
 {
-    "sentences": [
+    "clauses": [
         {
-            "sentence_type": "question",
+            "sentence_type": "negation",
             "pjm_sequence": [
                 {
                     "type": "sign",
-                    "gloss": "CZEMU"
+                    "gloss": "DOM"
                 },
                 {
                     "type": "sign",
-                    "gloss": "PÓJŚĆ",
-                    "is_negated": true,
-                    "tense": "past"
-                },
-                {
-                    "type": "sign",
-                    "gloss": "SKLEP"
-                },
-                {
-                    "type": "sign",
-                    "gloss": "JABŁKO",
-                    "is_plural": true
-                },
-                {
-                    "type": "sign",
-                    "gloss": "KUPIĆ"
+                    "gloss": "BYĆ"
                 }
             ]
         },
         {
-            "sentence_type": "exclamation",
+            "sentence_type": "negation",
             "pjm_sequence": [
                 {
                     "type": "sign",
-                    "gloss": "JUTRO"
+                    "gloss": "MECZ"
                 },
                 {
                     "type": "sign",
-                    "gloss": "PADAĆ",
-                    "tense": "future"
+                    "gloss": "OGLĄDAĆ",
+                    "is_negated": true
                 }
             ]
         },
@@ -46,30 +31,21 @@
             "sentence_type": "statement",
             "pjm_sequence": [
                 {
-                    "type": "fingerspell",
-                    "gloss": "SZCZECIN",
-                    "letters": [
-                        "S",
-                        "Z",
-                        "C",
-                        "Z",
-                        "E",
-                        "C",
-                        "I",
-                        "N"
-                    ]
+                    "type": "sign",
+                    "gloss": "BABCIA"
                 },
                 {
                     "type": "sign",
-                    "gloss": "BYĆ"
+                    "gloss": "DZIADEK"
                 },
                 {
                     "type": "sign",
-                    "gloss": "MIASTO"
+                    "gloss": "OBIAD"
                 },
                 {
                     "type": "sign",
-                    "gloss": "PIĘKNY"
+                    "gloss": "GOTOWAĆ",
+                    "is_plural": true
                 }
             ]
         }
