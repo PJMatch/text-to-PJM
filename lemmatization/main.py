@@ -9,7 +9,7 @@ logging.getLogger('stanza').setLevel(logging.ERROR)
 
 nlp = spacy_stanza.load_pipeline("pl")
 
-text = "jestem w domu i nie oglądam meczu, a babcia i dziadek gotują obiad."
+text = "Jestem w domu i nie oglądam meczu, a babcia i dziadek gotują obiad."
 doc = nlp(text)
 
 clauses = []
@@ -30,6 +30,8 @@ QUESTION_PATTERNS = [
     ["w", "jaki", "cel"],
     ["z", "jaki", "przyczyna"]
 ]
+
+CLAUSE_DEPS = {"root", "conj", "advcl", "ccomp", "parataxis"}
 
 def is_question(sentence):
     # check if sentence ends with a question mark
@@ -82,19 +84,41 @@ def get_tense(token):
     elif "Fut" in token.morph.get("Tense", []):
         return "future"
     return "present"
-    
+
+# Return True if the token can be treated as the root of a clause
+def is_clause_root(token):
+    return token.pos_ in ("VERB", "AUX") and token.dep_ in CLAUSE_DEPS
+
+# Extract all clause roots from a sentence based on POS and dependency labels
 def split_into_clauses(sentence):
-    clause_roots = []
+    return [token for token in sentence if is_clause_root(token)]
 
-    for token in sentence:
-        if token.dep_ == "root":
-            clause_roots.append(token)
+# Collect tokens belonging only to the clause headed by the given root
+def get_clause_tokens(root):
+    tokens = []
 
-        elif token.dep_ == "conj":
-            if token.pos_ in ("VERB", "AUX"):
-                clause_roots.append(token)
+    for tok in root.subtree:
+        # Ignore nested clause heads
+        if tok != root and is_clause_root(tok):
+            continue
 
-    return clause_roots
+        skip = False
+        for anc in tok.ancestors:
+            # Stop when we reach the current clause root
+            if anc == root:
+                break
+            
+            # Skip tokens that belong to nested clauses
+            if is_clause_root(anc):
+                skip = True
+                break
+
+        if not skip:
+            tokens.append(tok)
+
+    # Sort tokens by their original position in the sentence
+    return sorted(tokens, key=lambda t: t.i)   
+
 
 def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers):
     for child in token.children:
@@ -201,7 +225,7 @@ for sent in doc.sents:
     clause_roots = split_into_clauses(sent)
 
     for root in clause_roots:
-        clause_text_tokens = list(root.subtree)
+        clause_text_tokens = get_clause_tokens(root)
         clause_text = " ".join(token.text for token in clause_text_tokens)
 
         clause_doc = nlp(clause_text)
@@ -218,7 +242,7 @@ for sent in doc.sents:
         if clause_root is None:
             continue
 
-        clause_pjm = build_clause_pjm(clause_root)
+        clause_pjm = build_clause_pjm(root)
 
         clauses.append({
             "sentence_type": clause_type,
