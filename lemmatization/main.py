@@ -9,7 +9,7 @@ logging.getLogger('stanza').setLevel(logging.ERROR)
 
 nlp = spacy_stanza.load_pipeline("pl")
 
-text = "Jestem w domu i nie oglądam meczu, a babcia i dziadek gotują obiad."
+text = "nie rozumiam co ty mówisz"
 doc = nlp(text)
 
 clauses = []
@@ -34,6 +34,8 @@ QUESTION_PATTERNS = [
 CLAUSE_DEPS = {"root", "conj", "advcl", "ccomp", "parataxis"}
 
 def is_question(sentence):
+    """Determines if a sentence is a question"""
+
     # check if sentence ends with a question mark
     if sentence.text.strip().endswith("?"):
         return True
@@ -48,7 +50,7 @@ def is_question(sentence):
     if first_token in QUESTION_WORDS:
         return True
     
-    # check for specific question patterns (e.g. "po co", "w jaki sposób")
+    # check for specific question patterns
     lemmas = [t.lemma_.lower() for t in tokens]
 
     for pattern in QUESTION_PATTERNS:
@@ -58,6 +60,8 @@ def is_question(sentence):
     return False
 
 def is_negative(sentence):
+    """Determines if a sentence is a negation"""
+
     for token in sentence:
         if token.lemma_.lower() == "nie":
             return True
@@ -69,32 +73,45 @@ def is_negative(sentence):
     return False
 
 def classify_sentence(sentence):
+    """Determines the sentence type"""
+
     if is_question(sentence):
-        return "question" # pytajace
+        return "question" 
     elif sentence.text.strip().endswith("!"):
-        return "exclamation" # wykrzyknikowe
+        return "exclamation"
     elif is_negative(sentence):
-        return "negation" # przeczace
+        return "negation"
     else:
-        return "statement" # oznajmujace
+        return "statement"
     
 def get_tense(token):
+    """Determines the tense of a token"""
+
     if "Past" in token.morph.get("Tense", []):
         return "past"
     elif "Fut" in token.morph.get("Tense", []):
         return "future"
     return "present"
 
-# Return True if the token can be treated as the root of a clause
 def is_clause_root(token):
-    return token.pos_ in ("VERB", "AUX") and token.dep_ in CLAUSE_DEPS
+    """Determines if a token is a clause root"""
 
-# Extract all clause roots from a sentence based on POS and dependency labels
+    if token.dep_ == "root":
+        return True
+    
+    if token.dep_ in CLAUSE_DEPS:
+        return token.pos_ in ("VERB", "AUX", "ADJ", "NOUN", "PROPN")
+        
+    return False
+
 def split_into_clauses(sentence):
+    """Split a sentence into clauses based on dependency parsing"""
+
     return [token for token in sentence if is_clause_root(token)]
 
-# Collect tokens belonging only to the clause headed by the given root
 def get_clause_tokens(root):
+    """Collect tokens belonging only to the clause headed by the given root"""
+
     tokens = []
 
     for tok in root.subtree:
@@ -119,8 +136,9 @@ def get_clause_tokens(root):
     # Sort tokens by their original position in the sentence
     return sorted(tokens, key=lambda t: t.i)   
 
-
 def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers):
+    """Recursively collect subjects, objects, adverbials, and predicate modifiers for a given clause root"""
+
     for child in token.children:
         if child.is_punct or child.pos_ in ("ADP", "CCONJ", "SCONJ", "PART"):
             continue
@@ -145,7 +163,9 @@ def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers
             objects.append(parse_token_for_json(child))
             collect_dependents(child, subjects, objects, adverbials, predicate_modifiers)
 
-def build_clause_pjm(token):    
+def build_clause_pjm(token):
+    """Build the PJM gloss sequence for a clause based on its root and dependents"""
+
     subjects = []
     objects = []
     adverbials = []
@@ -176,6 +196,7 @@ def build_clause_pjm(token):
 
     if is_negated:
         main_verb_data["is_negated"] = True
+
     # Ordering the glosses: Adverbial -> Subject -> Object -> Verb
     verb_element = [main_verb_data] + predicate_modifiers
     clause_pjm = adverbials + subjects + objects + verb_element
@@ -185,8 +206,8 @@ def build_clause_pjm(token):
 
 def parse_token_for_json(token):
     """Determines if the token should be a sign or spelled out, and checks for plurals"""
+
     lemma_upper = token.lemma_.upper()
-    
     token_data = {}
     
     if lemma_upper in exeptions:
@@ -207,6 +228,7 @@ def parse_token_for_json(token):
     
 def get_noun_phrase(head_token):
     """Gets the head word and all its modifiers"""
+
     elements = [parse_token_for_json(head_token)]
     
     for sub in head_token.children:

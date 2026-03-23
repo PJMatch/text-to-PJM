@@ -5,47 +5,25 @@
             "pjm_sequence": [
                 {
                     "type": "sign",
-                    "gloss": "DOM"
-                },
-                {
-                    "type": "sign",
-                    "gloss": "BYĆ"
-                }
-            ]
-        },
-        {
-            "sentence_type": "negation",
-            "pjm_sequence": [
-                {
-                    "type": "sign",
-                    "gloss": "MECZ"
-                },
-                {
-                    "type": "sign",
-                    "gloss": "OGLĄDAĆ",
+                    "gloss": "ROZUMIEĆ",
                     "is_negated": true
                 }
             ]
         },
         {
-            "sentence_type": "statement",
+            "sentence_type": "question",
             "pjm_sequence": [
                 {
                     "type": "sign",
-                    "gloss": "BABCIA"
+                    "gloss": "TY"
                 },
                 {
                     "type": "sign",
-                    "gloss": "DZIADEK"
+                    "gloss": "CO"
                 },
                 {
                     "type": "sign",
-                    "gloss": "OBIAD"
-                },
-                {
-                    "type": "sign",
-                    "gloss": "GOTOWAĆ",
-                    "is_plural": true
+                    "gloss": "MÓWIĆ"
                 }
             ]
         }
