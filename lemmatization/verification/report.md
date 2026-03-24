@@ -1,9 +1,21 @@
 # Lemmatization Accuracy Report
 
-**Total analyzed words:** 497
+**Total analyzed words:** 1532
 
-**Accuracy:** 99.60%
+**Accuracy:** 99.09%
 
 ## Incorrect forms:
-- LIZIEĆ
-- PRACУ
+- BAŁAGANIE
+- BŁAZENKA
+- ILEJ
+- KOTLETA
+- LENIE
+- OSZALAĆ
+- POMAGANIE
+- SÓF
+- SŁÓWKA
+- TNIĆ
+- WYEKOMITY
+- WYRTOŚĆ
+- ZUTY
+- ZĄBKA

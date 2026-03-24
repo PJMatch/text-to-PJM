@@ -66,7 +66,7 @@ def get_noun_phrase(head_token):
             
     return elements
 
-input_filename = "input.txt"
+input_filename = "input_tatoeba.txt"
 output_filename = "output.txt"
 
 with open(input_filename, "r", encoding="utf-8") as file:

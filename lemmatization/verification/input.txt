@@ -9,7 +9,7 @@ Dlaczego Twój przyjaciel był wczoraj smutny?
 Czy ty wiesz, gdzie jest moja mama i siostra?
 Chce mi się pić.
 Moja siostra uczy się migać.
-Co robisz w pracу?
+Co robisz w pracy?
 Wczoraj byłem w szkole i uczyłem się migać.
 Nie rozumiem, co ty mówisz.
 Wesoła kobieta idzie do domu.
@@ -98,3 +98,28 @@ Czy wiesz, gdzie jest moja nowa książka?
 Mój przyjaciel studiuje w Warszawie i rzadko wraca do domu.
 Jesteśmy w sklepie i kupujemy jedzenie na jutro.
 Bardzo dziękuję, że wczoraj mi pomogłeś z tym zadaniem.
+Wczoraj szedłem bardzo wolno do domu.
+Jutro wezmę ten duży samochód od taty.
+Dlaczego drzesz moje stare notatki?
+Piekę słodkie ciasto dla chorej babci.
+Wiozę mojego brata do szpitala.
+Znalazłem wczoraj w lesie małego kota.
+Zdejmij szybko te brudne buty!
+Często plotę bzdury, kiedy jestem zmęczony. 
+Dziadek miele starą kawę w młynku.
+Tnę gruby papier na małe kawałki.
+Wczoraj giąłem twardy drut w pracy.
+Przyjaciel rzekł mi wczoraj całą prawdę.
+Biegliśmy bardzo szybko, bo padał deszcz.
+Małe dziecko głośno płacze i ssie smoczek.
+Często klnę, kiedy mój telefon źle działa.
+Ten zły chłopiec kradnie słodkie jabłka.
+Zrozumiałem wszystko, co do mnie napisałeś.
+Rano prałem swoje brudne ubrania.
+W weekend obejrzałem świetny film o zwierzętach.
+Całkiem zapomniałem, gdzie położyłem moje klucze.
+Dlaczego celowo psujesz moją dobrą zabawę?
+Płyń szybko na drugą stronę rzeki!
+Proszę, wejdź do mojego nowego domu.
+Zawsze jem rano duże i zdrowe śniadanie.
+Śpię bardzo twardo i nic nie słyszę.

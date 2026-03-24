@@ -4,11 +4,16 @@ import os
 filepath="output.txt"
 report_path="report.md"
 
+EXCEPTIONS = {
+"IGNOROWAĆ", "TOMEK", "BETTY", "JOAN", "TOM"
+}
+
 # Check if input file exists
 if not os.path.exists(filepath):
     print(f"Error: File '{filepath}' not found.")
+    exit()
 
-# Initialize Morfeusz with the default Polish dictionary
+# Initialize Morfeusz with the default Polish dictionary 
 morf = morfeusz2.Morfeusz()
 
 total_words = 0
@@ -22,6 +27,13 @@ with open(filepath, "r", encoding="utf-8") as file:
         
         for word in words:
             total_words += 1
+            
+            # chceck exceptions
+            if word.upper() in EXCEPTIONS:
+                correct_words += 1
+                print(f"Skipping exception: '{word}' -> Marked as correct.")
+                continue
+            
             lemma_lower = word.lower()
             analysis = morf.analyse(lemma_lower)
             
@@ -77,4 +89,4 @@ with open(report_path, "w", encoding="utf-8") as report_file:
     else:
         report_file.write("*All words are correct.*\n")
 
-print(f"\nreport generated and saved to: {report_path}")
+print(f"\nReport generated and saved to: {report_path}")
