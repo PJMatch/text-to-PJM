@@ -1,0 +1,1 @@
+# Podsumowanie pracy grupy projektowej odpowiedzialnej za zamianę text-to-PJM na 4 tydzień
