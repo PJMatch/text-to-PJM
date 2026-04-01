@@ -1,10 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from typing import List, Optional
-import json
+
+# importing the NLP engine function
+from nlp_engine import process_polish_text
 
 app = FastAPI(title="PJM Translator API")
-
 
 class GlossItem(BaseModel):
     type: str
@@ -13,11 +14,9 @@ class GlossItem(BaseModel):
     is_negated: Optional[bool] = None
     is_plural: Optional[bool] = None
 
-
 class Clause(BaseModel):
     sentence_type: str
     pjm_sequence: List[GlossItem]
-
 
 class GlossRequest(BaseModel):
     text: Optional[str] = None
@@ -32,10 +31,12 @@ class AnimationItem(BaseModel):
     is_negated: Optional[bool] = None
     is_plural: Optional[bool] = None
 
-
 class AnimationResponse(BaseModel):
     animations: List[AnimationItem]
 
+# Input text from user
+class TextRequest(BaseModel):
+    text: str
 
 # NA RAZIE ZAMIENIAMY RECZNIE TO JEST DO ZMIANY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ANIMATION_MAP = {
@@ -48,10 +49,8 @@ ANIMATION_MAP = {
     "NIE": "NIE"
 }
 
-
 def map_gloss_to_animation(gloss_item: GlossItem) -> AnimationItem:
     gloss = gloss_item.gloss.upper()
-
     animation_name = ANIMATION_MAP.get(gloss, gloss)
 
     return AnimationItem(
@@ -63,41 +62,25 @@ def map_gloss_to_animation(gloss_item: GlossItem) -> AnimationItem:
         is_plural=gloss_item.is_plural
     )
 
-
 @app.get("/")
 def root():
     return {"message": "PJM Translator API works"}
 
-# Endpoint to convert glosses to animations
-# DO ZMIANY TO JEST ROWNIEŻ - aktualnie działa na podstawie danych przesłanych w request (POST), nie jest jeszce połączony z kodem NLP czyli main.py i nie odpala sie automatycznie
-@app.post("/glosses-to-animations", response_model=AnimationResponse)
-def glosses_to_animations(data: GlossRequest):
-    animations: List[AnimationItem] = []
-
-    for clause in data.clauses:
-        for gloss_item in clause.pjm_sequence:
-            animations.append(map_gloss_to_animation(gloss_item))
-
-    return AnimationResponse(animations=animations)
-
-# Endpoint to load glosses from a JSON file and return corresponding animations
-# This is a temporary endpoint for testing purposes
-@app.post("/load-json-file", response_model=AnimationResponse)
-def load_json_file():
+# Main endpoint for translating text to animations
+@app.post("/translate", response_model=AnimationResponse)
+def translate_text_to_animations(request: TextRequest):
     try:
-        with open("results_glosses.json", "r", encoding="utf-8") as f:
-            raw = json.load(f)
+        # Polish text to structured gloss data
+        raw_gloss_data = process_polish_text(request.text)
+        data = GlossRequest(**raw_gloss_data)
+        
+        # Mapping gloss items to animations
+        animations: List[AnimationItem] = []
+        for clause in data.clauses:
+            for gloss_item in clause.pjm_sequence:
+                animations.append(map_gloss_to_animation(gloss_item))
 
-        data = GlossRequest(**raw)
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="Nie znaleziono pliku results_glosses.json")
+        return AnimationResponse(animations=animations)
+        
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Błąd wczytywania JSON: {str(e)}")
-
-    animations: List[AnimationItem] = []
-
-    for clause in data.clauses:
-        for gloss_item in clause.pjm_sequence:
-            animations.append(map_gloss_to_animation(gloss_item))
-
-    return AnimationResponse(animations=animations)
+        raise HTTPException(status_code=500, detail=f"Błąd tłumaczenia: {str(e)}")
