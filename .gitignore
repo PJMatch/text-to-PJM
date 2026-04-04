@@ -18,3 +18,5 @@ MetaHumans/
 films
 lemmatization/verification/tsv_clean.py
 lemmatization/verification/pol_sentences.tsv
+
+.idea/

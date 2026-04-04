@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from typing import List, Optional
+import unicodedata
 
 # importing the NLP engine function
 from nlp_engine import process_polish_text
@@ -38,20 +39,17 @@ class AnimationResponse(BaseModel):
 class TextRequest(BaseModel):
     text: str
 
-# NA RAZIE ZAMIENIAMY RECZNIE TO JEST DO ZMIANY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-ANIMATION_MAP = {
-    "DRZWI": "DRZWI",
-    "BATERIA": "BATERIA",
-    "JA": "JA",
-    "TY": "TY",
-    "MÓWIĆ": "MOWIC",
-    "ROZUMIEĆ": "ROZUMIEC",
-    "NIE": "NIE"
-}
+def remove_polish_chars(text: str) -> str:
+    text = unicodedata.normalize('NFKD', text)
+    # Remove diacritical marks (accents) to get base characters (normalize returns the base character and its accent)
+    text = "".join(c for c in text if not unicodedata.combining(c))
+    # 'Ł' is a separate Unicode character (not a base + accent), so normalize manually
+    text = text.replace("Ł", "L")
+    return text
 
 def map_gloss_to_animation(gloss_item: GlossItem) -> AnimationItem:
     gloss = gloss_item.gloss.upper()
-    animation_name = ANIMATION_MAP.get(gloss, gloss)
+    animation_name = remove_polish_chars(gloss)
 
     return AnimationItem(
         gloss=gloss,
@@ -73,7 +71,7 @@ def translate_text_to_animations(request: TextRequest):
         # Polish text to structured gloss data
         raw_gloss_data = process_polish_text(request.text)
         data = GlossRequest(**raw_gloss_data)
-        
+
         # Mapping gloss items to animations
         animations: List[AnimationItem] = []
         for clause in data.clauses:
@@ -81,6 +79,6 @@ def translate_text_to_animations(request: TextRequest):
                 animations.append(map_gloss_to_animation(gloss_item))
 
         return AnimationResponse(animations=animations)
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Błąd tłumaczenia: {str(e)}")
