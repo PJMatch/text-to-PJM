@@ -9,7 +9,7 @@ logging.getLogger('stanza').setLevel(logging.ERROR)
 
 nlp = spacy_stanza.load_pipeline("pl")
 
-text = "nie rozumiam co ty mówisz"
+text = "Ania kupiła jabłko, ponieważ nie miała nic w domu do jedzenia."
 doc = nlp(text)
 
 clauses = []
