@@ -1,0 +1,5 @@
+spacy-stanza
+fastapi
+pydantic
+uvicorn
+torch==2.3.1
