@@ -65,7 +65,7 @@ def root():
     return {"message": "PJM Translator API works"}
 
 # Main endpoint for translating text to animations
-@app.post("/translate", response_model=AnimationResponse)
+@app.post("/translate", response_model=List[AnimationItem])
 def translate_text_to_animations(request: TextRequest):
     try:
         # Polish text to structured gloss data
@@ -78,7 +78,7 @@ def translate_text_to_animations(request: TextRequest):
             for gloss_item in clause.pjm_sequence:
                 animations.append(map_gloss_to_animation(gloss_item))
 
-        return AnimationResponse(animations=animations)
+        return animations
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Błąd tłumaczenia: {str(e)}")
