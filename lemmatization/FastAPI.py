@@ -11,6 +11,7 @@ app = FastAPI(title="PJM Translator API")
 class GlossItem(BaseModel):
     type: str
     gloss: str
+    letters: Optional[List[str]] = None
     tense: Optional[str] = None
     is_negated: Optional[bool] = None
     is_plural: Optional[bool] = None
@@ -76,7 +77,19 @@ def translate_text_to_animations(request: TextRequest):
         animations: List[AnimationItem] = []
         for clause in data.clauses:
             for gloss_item in clause.pjm_sequence:
-                animations.append(map_gloss_to_animation(gloss_item))
+                
+                # Special handling for fingerspelling
+                if gloss_item.type == "fingerspell" and gloss_item.letters:
+                    for letter in gloss_item.letters:
+                        letter_upper = letter.upper()
+                        # Map each letter to its corresponding animation
+                        animations.append(AnimationItem(
+                            gloss=letter_upper,
+                            animation=remove_polish_chars(letter_upper),
+                            type="fingerspell"
+                        ))
+                else:
+                    animations.append(map_gloss_to_animation(gloss_item))
 
         return animations
 

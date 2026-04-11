@@ -210,7 +210,9 @@ def parse_token_for_json(token):
         fingerspell_ents = ["persName", "placeName", "geogName", "orgName"]
         is_proper_noun = token.pos_ == "PROPN" or token.ent_type_ in fingerspell_ents
         
-        if is_proper_noun:
+        unknown = token.pos_ in ("X", "SYM")
+
+        if is_proper_noun or unknown:
             token_data = {"type": "fingerspell", "gloss": lemma_upper, "letters": list(lemma_upper)}
         else:
             token_data = {"type": "sign", "gloss": lemma_upper}
