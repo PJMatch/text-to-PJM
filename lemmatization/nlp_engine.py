@@ -94,9 +94,13 @@ def is_clause_root(token):
         return True
     
     if token.dep_ in CLAUSE_DEPS:
+        if token.dep_ == "conj" and token.pos_ in ("NOUN", "PROPN"):
+            return False
+            
         return token.pos_ in ("VERB", "AUX", "ADJ", "NOUN", "PROPN")
         
     return False
+
 
 def split_into_clauses(sentence):
     """Split a sentence into clauses based on dependency parsing"""
@@ -193,7 +197,7 @@ def build_clause_pjm(token):
 
     # Ordering the glosses: Adverbial -> Subject -> Object -> Verb
     verb_element = [main_verb_data] + predicate_modifiers
-    clause_pjm = adverbials + subjects + objects + verb_element
+    clause_pjm = subjects + adverbials + objects + verb_element
     
 
     return clause_pjm
@@ -201,7 +205,7 @@ def build_clause_pjm(token):
 def parse_token_for_json(token):
     """Determines if the token should be a sign or spelled out, and checks for plurals"""
 
-    lemma_upper = token.lemma_.upper()
+    lemma_upper, lexical_negation = extract_negated_base_form(token)
     token_data = {}
     
     if lemma_upper in exeptions:
@@ -210,13 +214,14 @@ def parse_token_for_json(token):
         fingerspell_ents = ["persName", "placeName", "geogName", "orgName"]
         is_proper_noun = token.pos_ == "PROPN" or token.ent_type_ in fingerspell_ents
         
-        unknown = token.pos_ in ("X", "SYM")
-
-        if is_proper_noun or unknown:
+        if is_proper_noun:
             token_data = {"type": "fingerspell", "gloss": lemma_upper, "letters": list(lemma_upper)}
         else:
             token_data = {"type": "sign", "gloss": lemma_upper}
             
+    if lexical_negation:
+        token_data["is_negated"] = True
+
     if "Plur" in token.morph.get("Number", []):
         token_data["is_plural"] = True
         
@@ -237,6 +242,25 @@ def get_noun_phrase(head_token):
             elements.extend(get_noun_phrase(sub))
             
     return elements
+
+def extract_negated_base_form(token):
+    """Detect negated adjectives like 'niezadowolony', 'niemiły'."""
+
+    if token.pos_ != "ADJ":
+        return token.lemma_.upper(), False
+
+    lemma = token.lemma_.lower()
+    text = token.text.lower()
+
+    # Check if the lemma itself starts with "nie" and is longer than 3 characters
+    if lemma.startswith("nie") and len(lemma) > 3:
+        return lemma[3:].upper(), True
+
+    # Check if the actual text starts with "nie" (to catch cases where the lemma might not reflect the negation)
+    if text.startswith("nie") and len(text) > 3:
+        return text[3:].upper(), True
+
+    return token.lemma_.upper(), False
 
 def process_polish_text(text: str) -> dict:
     """Main function to process Polish text and return structured data for PJM translation"""
