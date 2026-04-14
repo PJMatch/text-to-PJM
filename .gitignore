@@ -11,6 +11,8 @@ Intermediate/
 Saved/
 .vs/
 *.sln
+*.vsconfig
+*.htm
 
 MetaHumans/
 VaultCache/
