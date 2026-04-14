@@ -14,7 +14,16 @@ Saved/
 *.vsconfig
 *.htm
 
-MetaHumans/
+UEProject/
+Common/
+Body/
+Face/
+FemaleHair/
+MaleHair/
+Materials/
+Previews/
+SourceAssets/
+VersionInfo.txt
 VaultCache/
 
 # Other files
