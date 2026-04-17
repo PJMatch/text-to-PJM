@@ -13,6 +13,7 @@ Saved/
 *.sln
 *.vsconfig
 *.htm
+FBX_Imports/
 
 UEProject/
 Common/
