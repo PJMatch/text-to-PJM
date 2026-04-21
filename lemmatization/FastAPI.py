@@ -29,6 +29,7 @@ class AnimationItem(BaseModel):
     gloss: str
     animation: str
     type: str
+    sentence_type: Optional[str] = None
     tense: Optional[str] = None
     is_negated: Optional[bool] = None
     is_plural: Optional[bool] = None
@@ -48,7 +49,7 @@ def remove_polish_chars(text: str) -> str:
     text = text.replace("Ł", "L")
     return text
 
-def map_gloss_to_animation(gloss_item: GlossItem) -> AnimationItem:
+def map_gloss_to_animation(gloss_item: GlossItem, sentence_type: Optional[str] = None) -> AnimationItem:
     gloss = gloss_item.gloss.upper()
     animation_name = remove_polish_chars(gloss)
 
@@ -56,6 +57,7 @@ def map_gloss_to_animation(gloss_item: GlossItem) -> AnimationItem:
         gloss=gloss,
         animation=animation_name,
         type=gloss_item.type,
+        sentence_type=sentence_type,
         tense=gloss_item.tense,
         is_negated=gloss_item.is_negated,
         is_plural=gloss_item.is_plural
@@ -86,10 +88,11 @@ def translate_text_to_animations(request: TextRequest):
                         animations.append(AnimationItem(
                             gloss=letter_upper,
                             animation=remove_polish_chars(letter_upper),
-                            type="fingerspell"
+                            type="fingerspell",
+                            sentence_type=clause.sentence_type
                         ))
                 else:
-                    animations.append(map_gloss_to_animation(gloss_item))
+                    animations.append(map_gloss_to_animation(gloss_item, clause.sentence_type))
 
         return animations
 

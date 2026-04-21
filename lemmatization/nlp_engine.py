@@ -97,7 +97,7 @@ def is_clause_root(token):
         if token.dep_ == "conj" and token.pos_ in ("NOUN", "PROPN"):
             return False
             
-        return token.pos_ in ("VERB", "AUX", "ADJ", "NOUN", "PROPN")
+        return token.pos_ in ("VERB", "AUX", "ADJ", "NOUN", "PROPN", "NUM")
         
     return False
 
@@ -139,6 +139,11 @@ def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers
 
     for child in token.children:
         if child.is_punct or child.pos_ in ("ADP", "CCONJ", "SCONJ", "PART"):
+            continue
+
+        # Handle numbers as objects
+        if child.pos_ == "NUM":
+            objects.append(parse_token_for_json(child))
             continue
 
         # Subjects (who/what performs the action)
@@ -195,15 +200,44 @@ def build_clause_pjm(token):
     if is_negated:
         main_verb_data["is_negated"] = True
 
+    if main_verb_data.get("gloss") == "ROZUMIEĆ" and main_verb_data.get("is_negated"):
+        main_verb_data["gloss"] = "NIE_ROZUMIEĆ"
+
     # Ordering the glosses: Adverbial -> Subject -> Object -> Verb
     verb_element = [main_verb_data] + predicate_modifiers
     clause_pjm = subjects + adverbials + objects + verb_element
     
+    final_pjm = []
+    skip_next = False
+    
+    for i in range(len(clause_pjm)):
+        if skip_next:
+            skip_next = False
+            continue
+            
+        curr = clause_pjm[i]
+            
+        # quick fix for "Dzień dobry" -> "DZIEŃ_DOBRY"
+        if i < len(clause_pjm) - 1:
+            nxt = clause_pjm[i+1]
+            if (curr.get("gloss") == "DZIEŃ" and nxt.get("gloss") == "DOBRY") or \
+               (curr.get("gloss") == "DOBRY" and nxt.get("gloss") == "DZIEŃ"):
+                final_pjm.append({"type": "sign", "gloss": "DZIEŃ_DOBRY"})
+                skip_next = True
+                continue
+                
+        final_pjm.append(curr)
 
-    return clause_pjm
+    return final_pjm
 
 def parse_token_for_json(token):
     """Determines if the token should be a sign or spelled out, and checks for plurals"""
+
+    if token.pos_ == "NUM":
+        return {
+            "type": "sign",
+            "gloss": token.text.upper()
+        }
 
     lemma_upper, lexical_negation = extract_negated_base_form(token)
     token_data = {}
@@ -230,18 +264,24 @@ def parse_token_for_json(token):
 def get_noun_phrase(head_token):
     """Gets the head word and all its modifiers"""
 
-    elements = [parse_token_for_json(head_token)]
+    numbers = []
+    after_head = []
     
     for sub in head_token.children:
         # Skip punctuation and irrelevant parts of speech
         if sub.is_punct or sub.pos_ in ("ADP", "CCONJ", "SCONJ", "PART"):
             continue
 
+        # Handle numbers as part of noun phrases
+        if sub.pos_ == "NUM":
+            numbers.extend(get_noun_phrase(sub))
+            continue
+
         # Only include modifiers that are relevant for noun phrases
         if sub.dep_ in ("flat", "appos", "nmod", "amod", "det", "nummod", "conj"):
-            elements.extend(get_noun_phrase(sub))
+            after_head.extend(get_noun_phrase(sub))
             
-    return elements
+    return numbers + [parse_token_for_json(head_token)] + after_head
 
 def extract_negated_base_form(token):
     """Detect negated adjectives like 'niezadowolony', 'niemiły'."""
