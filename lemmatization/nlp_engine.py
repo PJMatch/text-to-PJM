@@ -200,12 +200,35 @@ def build_clause_pjm(token):
     if is_negated:
         main_verb_data["is_negated"] = True
 
+    if main_verb_data.get("gloss") == "ROZUMIEĆ" and main_verb_data.get("is_negated"):
+        main_verb_data["gloss"] = "NIE_ROZUMIEĆ"
+
     # Ordering the glosses: Adverbial -> Subject -> Object -> Verb
     verb_element = [main_verb_data] + predicate_modifiers
     clause_pjm = subjects + adverbials + objects + verb_element
     
+    final_pjm = []
+    skip_next = False
+    
+    for i in range(len(clause_pjm)):
+        if skip_next:
+            skip_next = False
+            continue
+            
+        curr = clause_pjm[i]
+            
+        # quick fix for "Dzień dobry" -> "DZIEŃ_DOBRY"
+        if i < len(clause_pjm) - 1:
+            nxt = clause_pjm[i+1]
+            if (curr.get("gloss") == "DZIEŃ" and nxt.get("gloss") == "DOBRY") or \
+               (curr.get("gloss") == "DOBRY" and nxt.get("gloss") == "DZIEŃ"):
+                final_pjm.append({"type": "sign", "gloss": "DZIEŃ_DOBRY"})
+                skip_next = True
+                continue
+                
+        final_pjm.append(curr)
 
-    return clause_pjm
+    return final_pjm
 
 def parse_token_for_json(token):
     """Determines if the token should be a sign or spelled out, and checks for plurals"""
