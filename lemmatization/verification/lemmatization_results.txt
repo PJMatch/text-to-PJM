@@ -33,6 +33,8 @@ lemmatization: TELEFON STARY SAMOCHÓD BYĆ GDZIE
 text: Mój brat ma nowego kota, który bardzo lubi dużo spać.
 clause 1 type: statement
 lemmatization: BRAT KOT NOWY MIEĆ
+clause 2 type: question
+lemmatization: BARDZO SPAĆ DUŻO LUBIĆ KTÓRY
 
 ------------------------------------------------------------
 

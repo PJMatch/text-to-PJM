@@ -25,7 +25,7 @@ QUESTION_PATTERNS = [
     ["z", "jaki", "przyczyna"]
 ]
 
-CLAUSE_DEPS = {"root", "conj", "advcl", "ccomp", "parataxis"}
+CLAUSE_DEPS = {"root", "conj", "advcl", "ccomp", "parataxis", "acl:relcl"}
 
 
 def is_question(sentence):
@@ -66,6 +66,7 @@ def is_negative(sentence):
             return True
 
     return False
+
 
 def classify_sentence(sentence):
     """Determines the sentence type"""
