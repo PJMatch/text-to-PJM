@@ -14,7 +14,7 @@ lemmatization: IŚĆ SPAĆ CHCIEĆ
 
 text: Dlaczego wczoraj nie byłeś w szkole?
 clause 1 type: question
-lemmatization: DLACZEGO WCZORAJ SZKOŁA BYĆ [NEG] [PAST]
+lemmatization: WCZORAJ SZKOŁA BYĆ [NEG] [PAST] DLACZEGO
 
 ------------------------------------------------------------
 
@@ -26,7 +26,7 @@ lemmatization: BRAT DOM DUŻY SAMOCHÓD NOWY MIEĆ
 
 text: Gdzie jest mój stary telefon i samochód?
 clause 1 type: question
-lemmatization: TELEFON STARY SAMOCHÓD GDZIE BYĆ
+lemmatization: TELEFON STARY SAMOCHÓD BYĆ GDZIE
 
 ------------------------------------------------------------
 
@@ -46,7 +46,7 @@ lemmatization: TATA CZEKAĆ
 
 text: Dlaczego twój przyjaciel był wczoraj smutny?
 clause 1 type: question
-lemmatization: PRZYJACIEL DLACZEGO WCZORAJ SMUTNY
+lemmatization: PRZYJACIEL WCZORAJ SMUTNY DLACZEGO
 
 ------------------------------------------------------------
 
@@ -54,7 +54,7 @@ text: Czy ty wiesz, gdzie jest moja mama i siostra?
 clause 1 type: question
 lemmatization: TY WIEDZIEĆ
 clause 2 type: question
-lemmatization: MAMA SIOSTRA GDZIE BYĆ
+lemmatization: MAMA SIOSTRA BYĆ GDZIE
 
 ------------------------------------------------------------
 
@@ -72,7 +72,7 @@ lemmatization: SIOSTRA MIGAĆ UCZYĆ
 
 text: Co robisz w pracy?
 clause 1 type: question
-lemmatization: PRACA CO ROBIĆ
+lemmatization: PRACA ROBIĆ CO
 
 ------------------------------------------------------------
 
@@ -88,7 +88,7 @@ text: Nie rozumiem, co ty mówisz.
 clause 1 type: negation
 lemmatization: NIE_ROZUMIEĆ [NEG]
 clause 2 type: question
-lemmatization: TY CO MÓWIĆ
+lemmatization: TY MÓWIĆ CO
 
 ------------------------------------------------------------
 
@@ -140,31 +140,31 @@ text: Kolega nie rozumie, co ja mówię.
 clause 1 type: negation
 lemmatization: KOLEGA NIE_ROZUMIEĆ [NEG]
 clause 2 type: question
-lemmatization: JA CO MÓWIĆ
+lemmatization: JA MÓWIĆ CO
 
 ------------------------------------------------------------
 
 text: Gdzie jest mój przyjaciel?
 clause 1 type: question
-lemmatization: PRZYJACIEL GDZIE BYĆ
+lemmatization: PRZYJACIEL BYĆ GDZIE
 
 ------------------------------------------------------------
 
 text: Kto wczoraj widział mojego psa?
 clause 1 type: question
-lemmatization: KTO WCZORAJ PIES WIDZIEĆ [PAST]
+lemmatization: WCZORAJ PIES WIDZIEĆ [PAST] KTO
 
 ------------------------------------------------------------
 
 text: Ile pieniędzy chcesz?
 clause 1 type: question
-lemmatization: PIENIĄDZ CHCIEĆ
+lemmatization: PIENIĄDZ CHCIEĆ ILE
 
 ------------------------------------------------------------
 
 text: Kiedy my idziemy do pracy?
 clause 1 type: question
-lemmatization: MY KIEDY PRACA IŚĆ
+lemmatization: MY PRACA IŚĆ KIEDY
 
 ------------------------------------------------------------
 
@@ -172,13 +172,13 @@ text: Ty rozumiesz, co ona dzisiaj do ciebie mówi.
 clause 1 type: statement
 lemmatization: TY ROZUMIEĆ
 clause 2 type: question
-lemmatization: ON DZISIAJ CO TY MÓWIĆ
+lemmatization: ON DZISIAJ TY MÓWIĆ CO
 
 ------------------------------------------------------------
 
 text: Dlaczego wy uczycie się migać z tym mężczyzną?
 clause 1 type: question
-lemmatization: WY DLACZEGO MIGAĆ MĘŻCZYZNA TEN UCZYĆ
+lemmatization: WY MIGAĆ MĘŻCZYZNA TEN UCZYĆ DLACZEGO
 
 ------------------------------------------------------------
 
@@ -210,13 +210,13 @@ lemmatization: SIOSTRA BRAT TELEFON NOWY CZEKAĆ
 
 text: Dlaczego ty wczoraj nie chciałeś nam pomóc?
 clause 1 type: question
-lemmatization: TY DLACZEGO WCZORAJ POMÓC MY CHCIEĆ [NEG] [PAST]
+lemmatization: TY WCZORAJ POMÓC MY CHCIEĆ [NEG] [PAST] DLACZEGO
 
 ------------------------------------------------------------
 
 text: Jak duży jest twój nowy dom?
 clause 1 type: question
-lemmatization: DOM NOWY JAK DUŻY
+lemmatization: DOM NOWY DUŻY JAK
 
 ------------------------------------------------------------
 
@@ -224,7 +224,7 @@ text: Dziadek nie słyszy, co mówi ta kobieta.
 clause 1 type: negation
 lemmatization: DZIADEK SŁYSZEĆ [NEG]
 clause 2 type: question
-lemmatization: KOBIETA TEN CO MÓWIĆ
+lemmatization: KOBIETA TEN MÓWIĆ CO
 
 ------------------------------------------------------------
 
@@ -274,13 +274,13 @@ lemmatization: MIGAĆ
 
 text: Jak dobrze uczyć się migać w nowej szkole.
 clause 1 type: question
-lemmatization: JAK DOBRZE SZKOŁA NOWY MIGAĆ UCZYĆ
+lemmatization: DOBRZE SZKOŁA NOWY MIGAĆ UCZYĆ JAK
 
 ------------------------------------------------------------
 
 text: Dlaczego wy nie chcecie migać w szkole?
 clause 1 type: question
-lemmatization: WY DLACZEGO SZKOŁA MIGAĆ CHCIEĆ [NEG]
+lemmatization: WY SZKOŁA MIGAĆ CHCIEĆ [NEG] DLACZEGO
 
 ------------------------------------------------------------
 
@@ -326,7 +326,7 @@ lemmatization: BARDZO DZISIAJ SPAĆ CHCIEĆ
 
 text: Dlaczego ty jesteś dzisiaj bardzo smutny?
 clause 1 type: question
-lemmatization: TY DLACZEGO DZISIAJ BARDZO SMUTNY
+lemmatization: TY DZISIAJ BARDZO SMUTNY DLACZEGO
 
 ------------------------------------------------------------
 
@@ -380,7 +380,7 @@ text: My kochamy, kiedy oni są zdrowi i weseli.
 clause 1 type: statement
 lemmatization: MY KOCHAĆ
 clause 2 type: question
-lemmatization: ON KIEDY ZDROWY
+lemmatization: ON ZDROWY KIEDY
 clause 3 type: statement
 lemmatization: WESOŁY
 
@@ -404,7 +404,7 @@ text: Ty wiesz, jak bardzo lubię uczyć się migać.
 clause 1 type: statement
 lemmatization: TY WIEDZIEĆ
 clause 2 type: question
-lemmatization: BARDZO UCZYĆ MIGAĆ LUBIĆ
+lemmatization: BARDZO UCZYĆ MIGAĆ LUBIĆ JAK
 
 ------------------------------------------------------------
 
@@ -424,15 +424,15 @@ lemmatization: SPAĆ CHCIEĆ [NEG]
 
 text: Jak ty dzisiaj chcesz pracować, kiedy jesteś chory?
 clause 1 type: question
-lemmatization: TY JAK DZISIAJ PRACOWAĆ CHCIEĆ
+lemmatization: TY DZISIAJ PRACOWAĆ CHCIEĆ JAK
 clause 2 type: question
-lemmatization: KIEDY CHORY
+lemmatization: CHORY KIEDY
 
 ------------------------------------------------------------
 
 text: Kiedy oni uczą się migać z moim bratem?
 clause 1 type: question
-lemmatization: ON KIEDY MIGAĆ BRAT UCZYĆ
+lemmatization: ON MIGAĆ BRAT UCZYĆ KIEDY
 
 ------------------------------------------------------------
 
@@ -460,7 +460,7 @@ text: Stary dziadek nie słyszy, co my mówimy.
 clause 1 type: negation
 lemmatization: DZIADEK STARY SŁYSZEĆ [NEG]
 clause 2 type: question
-lemmatization: MY CO MÓWIĆ
+lemmatization: MY MÓWIĆ CO
 
 ------------------------------------------------------------
 
@@ -478,29 +478,29 @@ lemmatization: KOT TEN STARY DZISIAJ JEŚĆ CHCIEĆ [NEG]
 
 text: Dlaczego wy nie rozumiecie, co ja mówię?
 clause 1 type: question
-lemmatization: WY DLACZEGO NIE_ROZUMIEĆ [NEG]
+lemmatization: WY NIE_ROZUMIEĆ [NEG] DLACZEGO
 clause 2 type: question
-lemmatization: JA CO MÓWIĆ
+lemmatization: JA MÓWIĆ CO
 
 ------------------------------------------------------------
 
 text: Kto z was wie, jak dobrze migać?
 clause 1 type: question
-lemmatization: KTO WY JAK DOBRZE MIGAĆ WIEDZIEĆ
+lemmatization: DOBRZE MIGAĆ WIEDZIEĆ KTO JAK
 
 ------------------------------------------------------------
 
 text: Ile pieniędzy chcesz za ten mały samochód?
 clause 1 type: question
-lemmatization: PIENIĄDZ SAMOCHÓD TEN MAŁY CHCIEĆ
+lemmatization: PIENIĄDZ SAMOCHÓD TEN MAŁY CHCIEĆ ILE
 
 ------------------------------------------------------------
 
 text: Który telefon jest stary, a który bardzo nowy?
 clause 1 type: question
-lemmatization: TELEFON KTÓRY STARY
+lemmatization: TELEFON STARY KTÓRY
 clause 2 type: statement
-lemmatization: KTÓRY BARDZO NOWY
+lemmatization: BARDZO NOWY KTÓRY
 
 ------------------------------------------------------------
 
@@ -534,7 +534,7 @@ lemmatization: PRZYJACIEL DZISIAJ BARDZO PRACA JA POMÓC [PAST]
 
 text: Dlaczego ty dzisiaj rano nie byłeś u babci?
 clause 1 type: question
-lemmatization: TY DLACZEGO DZISIAJ RANO BABCIA BYĆ [NEG] [PAST]
+lemmatization: TY DZISIAJ RANO BABCIA BYĆ [NEG] [PAST] DLACZEGO
 
 ------------------------------------------------------------
 
@@ -568,7 +568,7 @@ lemmatization: CHORY
 
 text: Kto z was kocha tego małego, smutnego kota?
 clause 1 type: question
-lemmatization: KTO WY KOT TEN MAŁY SMUTNY KOCHAĆ
+lemmatization: KOT TEN MAŁY SMUTNY KOCHAĆ KTO
 clause 2 type: statement
 lemmatization: SMUTNY
 
@@ -590,7 +590,7 @@ lemmatization: NOC WODA PIĆ
 
 text: Gdzie my dzisiaj idziemy jeść i pić?
 clause 1 type: question
-lemmatization: MY GDZIE DZISIAJ JEŚĆ IŚĆ
+lemmatization: MY DZISIAJ JEŚĆ IŚĆ GDZIE
 clause 2 type: statement
 lemmatization: PIĆ
 
@@ -598,9 +598,9 @@ lemmatization: PIĆ
 
 text: Kto wie, dlaczego ona jest dzisiaj bardzo chora?
 clause 1 type: question
-lemmatization: KTO WIEDZIEĆ
+lemmatization: WIEDZIEĆ KTO
 clause 2 type: question
-lemmatization: ON DLACZEGO DZISIAJ BARDZO CHORY
+lemmatization: ON DZISIAJ BARDZO CHORY DLACZEGO
 
 ------------------------------------------------------------
 
@@ -608,7 +608,7 @@ text: Ja nie wiem, dlaczego on nie chce dzisiaj pomóc.
 clause 1 type: negation
 lemmatization: JA WIEDZIEĆ [NEG]
 clause 2 type: question
-lemmatization: ON DLACZEGO DZISIAJ POMÓC CHCIEĆ [NEG]
+lemmatization: ON DZISIAJ POMÓC CHCIEĆ [NEG] DLACZEGO
 
 ------------------------------------------------------------
 
@@ -626,13 +626,13 @@ lemmatization: DZIĘKOWAĆ
 clause 2 type: statement
 lemmatization: TY ROZUMIEĆ
 clause 3 type: question
-lemmatization: DLACZEGO SMUTNY
+lemmatization: SMUTNY DLACZEGO
 
 ------------------------------------------------------------
 
 text: Który telefon jest twój, ten stary czy ten nowy?
 clause 1 type: question
-lemmatization: TELEFON KTÓRY TWÓJ
+lemmatization: TELEFON TWÓJ KTÓRY
 clause 2 type: statement
 lemmatization: STARY TEN
 clause 3 type: question
@@ -642,9 +642,9 @@ lemmatization: NOWY TEN
 
 text: Jak on chce migać, kiedy nie widzi i nie słyszy?
 clause 1 type: question
-lemmatization: ON JAK MIGAĆ CHCIEĆ
+lemmatization: ON MIGAĆ CHCIEĆ JAK
 clause 2 type: question
-lemmatization: KIEDY WIDZIEĆ [NEG]
+lemmatization: WIDZIEĆ [NEG] KIEDY
 clause 3 type: negation
 lemmatization: SŁYSZEĆ [NEG]
 
@@ -662,7 +662,7 @@ text: Dzisiaj myślę, co my chcemy jeść jutro.
 clause 1 type: statement
 lemmatization: DZISIAJ MYŚLEĆ
 clause 2 type: question
-lemmatization: MY JUTRO JEŚĆ CO CHCIEĆ
+lemmatization: MY JUTRO JEŚĆ CHCIEĆ CO
 
 ------------------------------------------------------------
 
@@ -698,7 +698,7 @@ lemmatization: JEŚĆ
 
 text: Dlaczego nie chcesz napić się kawy?
 clause 1 type: question
-lemmatization: DLACZEGO NAPIĆ KAWA CHCIEĆ [NEG]
+lemmatization: NAPIĆ KAWA CHCIEĆ [NEG] DLACZEGO
 
 ------------------------------------------------------------
 

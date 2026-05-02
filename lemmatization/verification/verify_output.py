@@ -141,7 +141,7 @@ def get_clause_tokens(root):
     return sorted(tokens, key=lambda t: t.i)
 
 
-def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers):
+def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers, question_words):
     """Recursively collect subjects, objects, adverbials, and predicate modifiers for a given clause root"""
 
     for child in token.children:
@@ -153,25 +153,29 @@ def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers
             objects.append(parse_token_for_json(child))
             continue
 
+        if child.lemma_.lower() in QUESTION_WORDS:
+            question_words.append(parse_token_for_json(child))
+            continue
+
         # Subjects (who/what performs the action)
         if child.dep_.startswith("nsubj") or child.dep_ == "csubj":
-            subjects.extend(get_noun_phrase(child))
+            subjects.extend(get_noun_phrase(child, question_words))
 
         # Objects (whom/what)
         elif child.dep_.startswith("obj") or child.dep_ == "iobj" or child.dep_ == "obl:arg":
-            objects.extend(get_noun_phrase(child))
+            objects.extend(get_noun_phrase(child, question_words))
 
         # Adverbials (where/when)
         elif child.dep_.startswith("obl") or child.dep_ == "advmod":
-            adverbials.extend(get_noun_phrase(child))
+            adverbials.extend(get_noun_phrase(child, question_words))
 
             # Predicate modifiers
         elif child.dep_ in ("amod", "nmod", "det", "nummod"):
-            predicate_modifiers.extend(get_noun_phrase(child))
+            predicate_modifiers.extend(get_noun_phrase(child, question_words))
 
         elif child.dep_ == "xcomp" and child.pos_ in ("VERB", "AUX"):
             objects.append(parse_token_for_json(child))
-            collect_dependents(child, subjects, objects, adverbials, predicate_modifiers)
+            collect_dependents(child, subjects, objects, adverbials, predicate_modifiers, question_words)
 
 
 def build_clause_pjm(token):
@@ -181,8 +185,9 @@ def build_clause_pjm(token):
     objects = []
     adverbials = []
     predicate_modifiers = []
+    question_words = []
 
-    collect_dependents(token, subjects, objects, adverbials, predicate_modifiers)
+    collect_dependents(token, subjects, objects, adverbials, predicate_modifiers,question_words)
 
     main_verb_data = parse_token_for_json(token)
     tense = get_tense(token)
@@ -213,7 +218,7 @@ def build_clause_pjm(token):
 
     # Ordering the glosses: Adverbial -> Subject -> Object -> Verb
     verb_element = [main_verb_data] + predicate_modifiers
-    clause_pjm = subjects + adverbials + objects + verb_element
+    clause_pjm = subjects + adverbials + objects + verb_element + question_words
 
     final_pjm = []
     skip_next = False
@@ -271,7 +276,7 @@ def parse_token_for_json(token):
     return token_data
 
 
-def get_noun_phrase(head_token):
+def get_noun_phrase(head_token, question_words=None):
     """Gets the head word and all its modifiers"""
 
     numbers = []
@@ -280,6 +285,10 @@ def get_noun_phrase(head_token):
     for sub in head_token.children:
         # Skip punctuation and irrelevant parts of speech
         if sub.is_punct or sub.pos_ in ("ADP", "CCONJ", "SCONJ", "PART"):
+            continue
+
+        if question_words is not None and sub.lemma_.lower() in QUESTION_WORDS:
+            question_words.append(parse_token_for_json(sub))
             continue
 
         # Handle numbers as part of noun phrases
@@ -353,7 +362,6 @@ def process_polish_text(text: str) -> dict:
     }
 
 #=============================== VERIFY  OUTPUT ======================================
-import json
 
 def load_sentences_from_file(file_path="sentences.txt"):
     with open(file_path, "r", encoding="utf-8") as file:
