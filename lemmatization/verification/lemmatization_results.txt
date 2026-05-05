@@ -33,8 +33,8 @@ lemmatization: TELEFON STARY SAMOCHÓD BYĆ GDZIE
 text: Mój brat ma nowego kota, który bardzo lubi dużo spać.
 clause 1 type: statement
 lemmatization: BRAT KOT NOWY MIEĆ
-clause 2 type: question
-lemmatization: BARDZO SPAĆ DUŻO LUBIĆ KTÓRY
+clause 2 type: statement
+lemmatization: BARDZO SPAĆ DUŻO LUBIĆ
 
 ------------------------------------------------------------
 
@@ -88,7 +88,7 @@ lemmatization: MIGAĆ UCZYĆ [PAST]
 
 text: Nie rozumiem, co ty mówisz.
 clause 1 type: negation
-lemmatization: NIE_ROZUMIEĆ [NEG]
+lemmatization: NIE_ROZUMIEĆ
 clause 2 type: question
 lemmatization: TY MÓWIĆ CO
 
@@ -140,7 +140,7 @@ lemmatization: MĘŻCZYZNA SMUTNY KAWA ZIMNY PIĆ
 
 text: Kolega nie rozumie, co ja mówię.
 clause 1 type: negation
-lemmatization: KOLEGA NIE_ROZUMIEĆ [NEG]
+lemmatization: KOLEGA NIE_ROZUMIEĆ
 clause 2 type: question
 lemmatization: JA MÓWIĆ CO
 
@@ -194,7 +194,7 @@ text: On nie słyszy, ale bardzo dobrze widzi.
 clause 1 type: negation
 lemmatization: ON SŁYSZEĆ [NEG]
 clause 2 type: statement
-lemmatization: DOBRZE WIDZIEĆ
+lemmatization: DOBRZE BARDZO WIDZIEĆ
 
 ------------------------------------------------------------
 
@@ -246,7 +246,7 @@ lemmatization: WY BARDZO ZMĘCZONY
 
 text: Ona kocha duże psy i bardzo małe koty.
 clause 1 type: statement
-lemmatization: ON PIES DUŻY KOT MAŁY KOCHAĆ
+lemmatization: ON PIES DUŻY KOT MAŁY BARDZO KOCHAĆ
 
 ------------------------------------------------------------
 
@@ -308,7 +308,7 @@ lemmatization: PIES MAŁY JEŚĆ WODA CZEKAĆ
 
 text: To ważne, że my jesteśmy dzisiaj zdrowi.
 clause 1 type: statement
-lemmatization: ZDROWY WAŻNY
+lemmatization: ZDROWY DZISIAJ WAŻNY
 
 ------------------------------------------------------------
 
@@ -348,7 +348,7 @@ lemmatization: JA STARY
 
 text: Jutro rano idę pracować do nowej szkoły.
 clause 1 type: statement
-lemmatization: JUTRO SZKOŁA NOWY PRACOWAĆ IŚĆ
+lemmatization: JUTRO RANO SZKOŁA NOWY PRACOWAĆ IŚĆ
 
 ------------------------------------------------------------
 
@@ -377,15 +377,13 @@ clause 1 type: statement
 lemmatization: MĘŻCZYZNA WESOŁY DOM NOWY PIENIĄDZ MIEĆ
 
 ------------------------------------------------------------
-
+!!!
 text: My kochamy, kiedy oni są zdrowi i weseli.
 clause 1 type: statement
 lemmatization: MY KOCHAĆ
 clause 2 type: question
-lemmatization: ON ZDROWY KIEDY
-clause 3 type: statement
-lemmatization: WESOŁY
-
+lemmatization: ON ZDROWY WESOŁY KIEDY
+!!!
 ------------------------------------------------------------
 
 text: Ty jesteś zmęczony, więc nie chcesz teraz migać.
@@ -398,7 +396,7 @@ lemmatization: TERAZ MIGAĆ CHCIEĆ [NEG]
 
 text: Jutro rano czekam na ważny telefon w pracy.
 clause 1 type: statement
-lemmatization: JUTRO TELEFON WAŻNY PRACA CZEKAĆ
+lemmatization: JUTRO RANO TELEFON WAŻNY PRACA CZEKAĆ
 
 ------------------------------------------------------------
 
@@ -427,8 +425,8 @@ lemmatization: SPAĆ CHCIEĆ [NEG]
 text: Jak ty dzisiaj chcesz pracować, kiedy jesteś chory?
 clause 1 type: question
 lemmatization: TY DZISIAJ PRACOWAĆ CHCIEĆ JAK
-clause 2 type: question
-lemmatization: CHORY KIEDY
+clause 2 type: statement
+lemmatization: CHORY
 
 ------------------------------------------------------------
 
@@ -440,7 +438,7 @@ lemmatization: ON MIGAĆ BRAT UCZYĆ KIEDY
 
 text: Wczoraj rano ty byłeś bardzo zmęczony.
 clause 1 type: statement
-lemmatization: TY WCZORAJ BARDZO ZMĘCZONY
+lemmatization: TY WCZORAJ RANO BARDZO ZMĘCZONY
 
 ------------------------------------------------------------
 
@@ -480,7 +478,7 @@ lemmatization: KOT TEN STARY DZISIAJ JEŚĆ CHCIEĆ [NEG]
 
 text: Dlaczego wy nie rozumiecie, co ja mówię?
 clause 1 type: question
-lemmatization: WY NIE_ROZUMIEĆ [NEG] DLACZEGO
+lemmatization: WY NIE_ROZUMIEĆ DLACZEGO
 clause 2 type: question
 lemmatization: JA MÓWIĆ CO
 
@@ -497,20 +495,18 @@ clause 1 type: question
 lemmatization: PIENIĄDZ SAMOCHÓD TEN MAŁY CHCIEĆ ILE
 
 ------------------------------------------------------------
-
+!!!!!
 text: Który telefon jest stary, a który bardzo nowy?
 clause 1 type: question
-lemmatization: TELEFON STARY KTÓRY
-clause 2 type: statement
-lemmatization: BARDZO NOWY KTÓRY
-
+lemmatization: TELEFON STARY NOWY BARDZO KTÓRY KTÓRY
+!!!!!
 ------------------------------------------------------------
 
 text: Ja wiem, że ty masz dzisiaj bardzo dobry dzień.
 clause 1 type: statement
 lemmatization: JA WIEDZIEĆ
 clause 2 type: statement
-lemmatization: TY DZISIAJ DZIEŃ_DOBRY MIEĆ
+lemmatization: TY DZISIAJ DZIEŃ DOBRY BARDZO MIEĆ
 
 ------------------------------------------------------------
 
@@ -562,17 +558,13 @@ text: My widzimy, że oni są bardzo zmęczeni i chorzy.
 clause 1 type: statement
 lemmatization: MY WIDZIEĆ
 clause 2 type: statement
-lemmatization: ON BARDZO ZMĘCZONY
-clause 3 type: statement
-lemmatization: CHORY
+lemmatization: ON BARDZO ZMĘCZONY CHORY
 
 ------------------------------------------------------------
 
 text: Kto z was kocha tego małego, smutnego kota?
 clause 1 type: question
 lemmatization: KOT TEN MAŁY SMUTNY KOCHAĆ KTO
-clause 2 type: statement
-lemmatization: SMUTNY
 
 ------------------------------------------------------------
 
@@ -631,22 +623,18 @@ clause 3 type: question
 lemmatization: SMUTNY DLACZEGO
 
 ------------------------------------------------------------
-
+?????
 text: Który telefon jest twój, ten stary czy ten nowy?
 clause 1 type: question
-lemmatization: TELEFON TWÓJ KTÓRY
-clause 2 type: statement
-lemmatization: STARY TEN
-clause 3 type: question
-lemmatization: NOWY TEN
-
+lemmatization: TELEFON TWÓJ STARY TEN NOWY TEN KTÓRY
+?????
 ------------------------------------------------------------
 
 text: Jak on chce migać, kiedy nie widzi i nie słyszy?
 clause 1 type: question
 lemmatization: ON MIGAĆ CHCIEĆ JAK
-clause 2 type: question
-lemmatization: WIDZIEĆ [NEG] KIEDY
+clause 2 type: negation
+lemmatization: WIDZIEĆ [NEG]
 clause 3 type: negation
 lemmatization: SŁYSZEĆ [NEG]
 
@@ -654,9 +642,7 @@ lemmatization: SŁYSZEĆ [NEG]
 
 text: Wczoraj wieczorem byłem bardzo zdrowy i wesoły.
 clause 1 type: statement
-lemmatization: WCZORAJ BARDZO ZDROWY
-clause 2 type: statement
-lemmatization: WESOŁY
+lemmatization: WCZORAJ WIECZÓR BARDZO ZDROWY WESOŁY
 
 ------------------------------------------------------------
 
@@ -686,7 +672,7 @@ lemmatization: DZISIAJ JEŚĆ CHCIEĆ [NEG]
 
 text: On lubi gorącą herbatę w bardzo zimny dzień.
 clause 1 type: statement
-lemmatization: ON DZIEŃ ZIMNY HERBATA GORĄCY LUBIĆ
+lemmatization: ON DZIEŃ ZIMNY BARDZO HERBATA GORĄCY LUBIĆ
 
 ------------------------------------------------------------
 
@@ -701,6 +687,40 @@ lemmatization: JEŚĆ
 text: Dlaczego nie chcesz napić się kawy?
 clause 1 type: question
 lemmatization: NAPIĆ KAWA CHCIEĆ [NEG] DLACZEGO
+
+------------------------------------------------------------
+
+text: Dzień dobry, nazywam się Maciej
+clause 1 type: statement
+lemmatization: DZIEŃ_DOBRY
+clause 2 type: statement
+lemmatization: MACIEJ NAZYWAĆ
+
+------------------------------------------------------------
+
+text: Idę do domu, bo chcę się wyspać, do widzenia.
+clause 1 type: statement
+lemmatization: DOM IŚĆ
+clause 2 type: statement
+lemmatization: WYSPAĆ CHCIEĆ
+clause 3 type: statement
+lemmatization: DO_WIDZENIA
+
+------------------------------------------------------------
+
+text: Poszedłem do sklepu, który miałem pod domem.
+clause 1 type: statement
+lemmatization: SKLEP PÓJŚĆ [PAST]
+clause 2 type: statement
+lemmatization: DOM MIEĆ [PAST]
+
+------------------------------------------------------------
+
+text: Jadę do Wejherowa, gdzie mamy nagrywki.
+clause 1 type: statement
+lemmatization: WEJHEROWO JECHAĆ
+clause 2 type: statement
+lemmatization: NAGRYWKA MIEĆ
 
 ------------------------------------------------------------
 
