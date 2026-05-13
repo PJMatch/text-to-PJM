@@ -6,15 +6,15 @@ lemmatization: BABCIA DZIADEK SAMOCHÓD STARY MIEĆ
 
 text: Dzisiaj jestem zmęczony i chcę już iść spać.
 clause 1 type: statement
-lemmatization: DZISIAJ ZMĘCZONY
+lemmatization: JA DZISIAJ ZMĘCZONY
 clause 2 type: statement
-lemmatization: IŚĆ SPAĆ CHCIEĆ
+lemmatization: JA IŚĆ SPAĆ CHCIEĆ
 
 ------------------------------------------------------------
 
 text: Dlaczego wczoraj nie byłeś w szkole?
 clause 1 type: question
-lemmatization: WCZORAJ SZKOŁA BYĆ [NEG] [PAST] DLACZEGO
+lemmatization: TY WCZORAJ SZKOŁA BYĆ [NEG] [PAST] DLACZEGO
 
 ------------------------------------------------------------
 
@@ -34,7 +34,7 @@ text: Mój brat ma nowego kota, który bardzo lubi dużo spać.
 clause 1 type: statement
 lemmatization: BRAT KOT NOWY MIEĆ
 clause 2 type: statement
-lemmatization: BARDZO SPAĆ DUŻO LUBIĆ
+lemmatization: ON BARDZO SPAĆ DUŻO LUBIĆ
 
 ------------------------------------------------------------
 
@@ -42,7 +42,7 @@ text: My jesteśmy w domu i czekamy na tatę.
 clause 1 type: statement
 lemmatization: MY DOM BYĆ
 clause 2 type: statement
-lemmatization: TATA CZEKAĆ
+lemmatization: MY TATA CZEKAĆ
 
 ------------------------------------------------------------
 
@@ -74,21 +74,21 @@ lemmatization: SIOSTRA MIGAĆ UCZYĆ
 
 text: Co robisz w pracy?
 clause 1 type: question
-lemmatization: PRACA ROBIĆ CO
+lemmatization: TY PRACA ROBIĆ CO
 
 ------------------------------------------------------------
 
 text: Wczoraj byłem w szkole i uczyłem się migać.
 clause 1 type: statement
-lemmatization: WCZORAJ SZKOŁA BYĆ [PAST]
+lemmatization: JA WCZORAJ SZKOŁA BYĆ [PAST]
 clause 2 type: statement
-lemmatization: MIGAĆ UCZYĆ [PAST]
+lemmatization: JA MIGAĆ UCZYĆ [PAST]
 
 ------------------------------------------------------------
 
 text: Nie rozumiem, co ty mówisz.
 clause 1 type: negation
-lemmatization: NIE_ROZUMIEĆ
+lemmatization: JA NIE_ROZUMIEĆ
 clause 2 type: question
 lemmatization: TY MÓWIĆ CO
 
@@ -114,7 +114,7 @@ lemmatization: TY UCZYĆ MIGAĆ LUBIĆ
 
 text: Dziękuję za wodę i jedzenie.
 clause 1 type: statement
-lemmatization: WODA JEŚĆ DZIĘKOWAĆ
+lemmatization: JA WODA JEŚĆ DZIĘKOWAĆ
 
 ------------------------------------------------------------
 
@@ -122,7 +122,7 @@ text: Dzisiaj jest poniedziałek, idę do szkoły.
 clause 1 type: statement
 lemmatization: PONIEDZIAŁEK DZISIAJ BYĆ
 clause 2 type: statement
-lemmatization: SZKOŁA IŚĆ
+lemmatization: JA SZKOŁA IŚĆ
 
 ------------------------------------------------------------
 
@@ -160,7 +160,7 @@ lemmatization: WCZORAJ PIES WIDZIEĆ [PAST] KTO
 
 text: Ile pieniędzy chcesz?
 clause 1 type: question
-lemmatization: PIENIĄDZ CHCIEĆ ILE
+lemmatization: TY PIENIĄDZ CHCIEĆ ILE
 
 ------------------------------------------------------------
 
@@ -194,7 +194,7 @@ text: On nie słyszy, ale bardzo dobrze widzi.
 clause 1 type: negation
 lemmatization: ON SŁYSZEĆ [NEG]
 clause 2 type: statement
-lemmatization: DOBRZE BARDZO WIDZIEĆ
+lemmatization: ON DOBRZE BARDZO WIDZIEĆ
 
 ------------------------------------------------------------
 
@@ -268,9 +268,9 @@ text: Mężczyzna nie słyszy, ale myśli i miga.
 clause 1 type: negation
 lemmatization: MĘŻCZYZNA SŁYSZEĆ [NEG]
 clause 2 type: statement
-lemmatization: MYŚLEĆ
+lemmatization: ON MYŚLEĆ
 clause 3 type: statement
-lemmatization: MIGAĆ
+lemmatization: ON MIGAĆ
 
 ------------------------------------------------------------
 
@@ -296,7 +296,7 @@ text: Brat ma kota i chce mieć małego psa.
 clause 1 type: statement
 lemmatization: BRAT KOT MIEĆ
 clause 2 type: statement
-lemmatization: MIEĆ PIES MAŁY CHCIEĆ
+lemmatization: ON MIEĆ PIES MAŁY CHCIEĆ
 
 ------------------------------------------------------------
 
@@ -320,9 +320,9 @@ lemmatization: KOLEGA PRACA MIGAĆ JA UCZYĆ
 
 text: Jestem chory i bardzo chcę dzisiaj spać.
 clause 1 type: statement
-lemmatization: CHORY
+lemmatization: JA CHORY
 clause 2 type: statement
-lemmatization: BARDZO DZISIAJ SPAĆ CHCIEĆ
+lemmatization: JA BARDZO DZISIAJ SPAĆ CHCIEĆ
 
 ------------------------------------------------------------
 
@@ -348,7 +348,7 @@ lemmatization: JA STARY
 
 text: Jutro rano idę pracować do nowej szkoły.
 clause 1 type: statement
-lemmatization: JUTRO RANO SZKOŁA NOWY PRACOWAĆ IŚĆ
+lemmatization: JA JUTRO RANO SZKOŁA NOWY PRACOWAĆ IŚĆ
 
 ------------------------------------------------------------
 
@@ -377,26 +377,26 @@ clause 1 type: statement
 lemmatization: MĘŻCZYZNA WESOŁY DOM NOWY PIENIĄDZ MIEĆ
 
 ------------------------------------------------------------
-!!!
+
 text: My kochamy, kiedy oni są zdrowi i weseli.
 clause 1 type: statement
 lemmatization: MY KOCHAĆ
 clause 2 type: question
 lemmatization: ON ZDROWY WESOŁY KIEDY
-!!!
+
 ------------------------------------------------------------
 
 text: Ty jesteś zmęczony, więc nie chcesz teraz migać.
 clause 1 type: statement
 lemmatization: TY ZMĘCZONY
 clause 2 type: negation
-lemmatization: TERAZ MIGAĆ CHCIEĆ [NEG]
+lemmatization: TY TERAZ MIGAĆ CHCIEĆ [NEG]
 
 ------------------------------------------------------------
 
 text: Jutro rano czekam na ważny telefon w pracy.
 clause 1 type: statement
-lemmatization: JUTRO RANO TELEFON WAŻNY PRACA CZEKAĆ
+lemmatization: JA JUTRO RANO TELEFON WAŻNY PRACA CZEKAĆ
 
 ------------------------------------------------------------
 
@@ -404,7 +404,7 @@ text: Ty wiesz, jak bardzo lubię uczyć się migać.
 clause 1 type: statement
 lemmatization: TY WIEDZIEĆ
 clause 2 type: question
-lemmatization: BARDZO UCZYĆ MIGAĆ LUBIĆ JAK
+lemmatization: JA BARDZO UCZYĆ MIGAĆ LUBIĆ JAK
 
 ------------------------------------------------------------
 
@@ -418,7 +418,7 @@ text: My dzisiaj dużo pracujemy i nie chcemy spać.
 clause 1 type: statement
 lemmatization: MY DZISIAJ DUŻO PRACOWAĆ
 clause 2 type: negation
-lemmatization: SPAĆ CHCIEĆ [NEG]
+lemmatization: MY SPAĆ CHCIEĆ [NEG]
 
 ------------------------------------------------------------
 
@@ -426,7 +426,7 @@ text: Jak ty dzisiaj chcesz pracować, kiedy jesteś chory?
 clause 1 type: question
 lemmatization: TY DZISIAJ PRACOWAĆ CHCIEĆ JAK
 clause 2 type: statement
-lemmatization: CHORY
+lemmatization: TY CHORY
 
 ------------------------------------------------------------
 
@@ -452,7 +452,7 @@ text: Dzisiaj jest nowy dzień, więc jestem wesoły.
 clause 1 type: statement
 lemmatization: DZIEŃ NOWY DZISIAJ BYĆ
 clause 2 type: statement
-lemmatization: WESOŁY
+lemmatization: JA WESOŁY
 
 ------------------------------------------------------------
 
@@ -492,14 +492,14 @@ lemmatization: DOBRZE MIGAĆ WIEDZIEĆ KTO JAK
 
 text: Ile pieniędzy chcesz za ten mały samochód?
 clause 1 type: question
-lemmatization: PIENIĄDZ SAMOCHÓD TEN MAŁY CHCIEĆ ILE
+lemmatization: TY PIENIĄDZ SAMOCHÓD TEN MAŁY CHCIEĆ ILE
 
 ------------------------------------------------------------
-!!!!!
+
 text: Który telefon jest stary, a który bardzo nowy?
 clause 1 type: question
 lemmatization: TELEFON STARY NOWY BARDZO KTÓRY KTÓRY
-!!!!!
+
 ------------------------------------------------------------
 
 text: Ja wiem, że ty masz dzisiaj bardzo dobry dzień.
@@ -518,7 +518,7 @@ lemmatization: ON MIEĆ DOM DUŻY PIENIĄDZ CHCIEĆ
 
 text: Przepraszam, ja wczoraj nie byłem w domu.
 clause 1 type: statement
-lemmatization: PRZEPRASZAĆ
+lemmatization: JA PRZEPRASZAĆ
 clause 2 type: negation
 lemmatization: JA WCZORAJ DOM BYĆ [NEG] [PAST]
 
@@ -576,9 +576,9 @@ lemmatization: MY ROK NOWY MIEĆ PIENIĄDZ LUBIĆ
 
 text: Rano zawsze piję kawę, a w nocy piję wodę.
 clause 1 type: statement
-lemmatization: RANO ZAWSZE KAWA PIĆ
+lemmatization: JA RANO ZAWSZE KAWA PIĆ
 clause 2 type: statement
-lemmatization: NOC WODA PIĆ
+lemmatization: JA NOC WODA PIĆ
 
 ------------------------------------------------------------
 
@@ -608,7 +608,7 @@ lemmatization: ON DZISIAJ POMÓC CHCIEĆ [NEG] DLACZEGO
 
 text: Przepraszam, ale ja nie mam dzisiaj dużo pieniędzy.
 clause 1 type: statement
-lemmatization: PRZEPRASZAĆ
+lemmatization: JA PRZEPRASZAĆ
 clause 2 type: negation
 lemmatization: JA DZISIAJ PIENIĄDZ MIEĆ [NEG]
 
@@ -616,39 +616,39 @@ lemmatization: JA DZISIAJ PIENIĄDZ MIEĆ [NEG]
 
 text: Dziękuję, że ty rozumiesz, dlaczego jestem smutny.
 clause 1 type: statement
-lemmatization: DZIĘKOWAĆ
+lemmatization: JA DZIĘKOWAĆ
 clause 2 type: statement
 lemmatization: TY ROZUMIEĆ
 clause 3 type: question
-lemmatization: SMUTNY DLACZEGO
+lemmatization: JA SMUTNY DLACZEGO
 
 ------------------------------------------------------------
-?????
+
 text: Który telefon jest twój, ten stary czy ten nowy?
 clause 1 type: question
 lemmatization: TELEFON TWÓJ STARY TEN NOWY TEN KTÓRY
-?????
+
 ------------------------------------------------------------
 
 text: Jak on chce migać, kiedy nie widzi i nie słyszy?
 clause 1 type: question
 lemmatization: ON MIGAĆ CHCIEĆ JAK
 clause 2 type: negation
-lemmatization: WIDZIEĆ [NEG]
+lemmatization: ON WIDZIEĆ [NEG]
 clause 3 type: negation
-lemmatization: SŁYSZEĆ [NEG]
+lemmatization: ON SŁYSZEĆ [NEG]
 
 ------------------------------------------------------------
 
 text: Wczoraj wieczorem byłem bardzo zdrowy i wesoły.
 clause 1 type: statement
-lemmatization: WCZORAJ WIECZÓR BARDZO ZDROWY WESOŁY
+lemmatization: JA WCZORAJ WIECZÓR BARDZO ZDROWY WESOŁY
 
 ------------------------------------------------------------
 
 text: Dzisiaj myślę, co my chcemy jeść jutro.
 clause 1 type: statement
-lemmatization: DZISIAJ MYŚLEĆ
+lemmatization: JA DZISIAJ MYŚLEĆ
 clause 2 type: question
 lemmatization: MY JUTRO JEŚĆ CHCIEĆ CO
 
@@ -666,7 +666,7 @@ text: Ja jestem chory i nie chcę dzisiaj jeść.
 clause 1 type: statement
 lemmatization: JA CHORY
 clause 2 type: negation
-lemmatization: DZISIAJ JEŚĆ CHCIEĆ [NEG]
+lemmatization: JA DZISIAJ JEŚĆ CHCIEĆ [NEG]
 
 ------------------------------------------------------------
 
@@ -686,7 +686,7 @@ lemmatization: JEŚĆ
 
 text: Dlaczego nie chcesz napić się kawy?
 clause 1 type: question
-lemmatization: NAPIĆ KAWA CHCIEĆ [NEG] DLACZEGO
+lemmatization: TY NAPIĆ KAWA CHCIEĆ [NEG] DLACZEGO
 
 ------------------------------------------------------------
 
@@ -700,9 +700,9 @@ lemmatization: MACIEJ NAZYWAĆ
 
 text: Idę do domu, bo chcę się wyspać, do widzenia.
 clause 1 type: statement
-lemmatization: DOM IŚĆ
+lemmatization: JA DOM IŚĆ
 clause 2 type: statement
-lemmatization: WYSPAĆ CHCIEĆ
+lemmatization: JA WYSPAĆ CHCIEĆ
 clause 3 type: statement
 lemmatization: DO_WIDZENIA
 
@@ -710,17 +710,17 @@ lemmatization: DO_WIDZENIA
 
 text: Poszedłem do sklepu, który miałem pod domem.
 clause 1 type: statement
-lemmatization: SKLEP PÓJŚĆ [PAST]
+lemmatization: JA SKLEP PÓJŚĆ [PAST]
 clause 2 type: statement
-lemmatization: DOM MIEĆ [PAST]
+lemmatization: JA DOM MIEĆ [PAST]
 
 ------------------------------------------------------------
 
 text: Jadę do Wejherowa, gdzie mamy nagrywki.
 clause 1 type: statement
-lemmatization: WEJHEROWO JECHAĆ
+lemmatization: JA WEJHEROWO JECHAĆ
 clause 2 type: statement
-lemmatization: NAGRYWKA MIEĆ
+lemmatization: MY NAGRYWKA MIEĆ
 
 ------------------------------------------------------------
 

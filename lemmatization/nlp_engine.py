@@ -92,7 +92,6 @@ def is_negative(sentence):
 
     return False
 
-
 def classify_sentence(sentence):
     """Determines the sentence type"""
 
@@ -104,8 +103,7 @@ def classify_sentence(sentence):
         return "negation"
     else:
         return "statement"
-
-
+    
 def get_tense(token):
     """Determines the tense of a token"""
 
@@ -115,6 +113,83 @@ def get_tense(token):
         return "future"
     return "present"
 
+def infer_subject_from_verb(token, allow_third_person=False):
+    """Recover hidden Polish subject from verb morphology."""
+
+    if token is None:
+        return None
+
+    person = token.morph.get("Person")
+    number = token.morph.get("Number")
+    gender = token.morph.get("Gender")
+
+    if not person:
+        return None
+
+    person = person[0]
+    number = number[0] if number else None
+
+    if person == "1":
+        gloss = "JA" if number == "Sing" else "MY"
+
+    elif person == "2":
+        gloss = "TY" if number == "Sing" else "WY"
+
+    elif person == "3":
+        if not allow_third_person:
+            return None
+
+        if number == "Sing":
+            if gender and gender[0] == "Fem":
+                gloss = "ONA"
+            elif gender and gender[0] == "Neut":
+                gloss = "ONO"
+            else:
+                gloss = "ON"
+        else:
+            gloss = "ONI"
+
+    else:
+        return None
+
+    return {
+        "type": "sign",
+        "gloss": gloss
+    }
+
+def get_clause_subtree_tokens(token):
+    return sorted(list(token.subtree), key=lambda t: t.i)
+
+
+def get_finite_controller(token):
+    """Finds the finite verb or auxiliary that carries grammatical person/number information for the clause."""
+
+    candidates = []
+
+    # Look for verbs and auxiliaries in the subtree of the clause root
+    for tok in get_clause_subtree_tokens(token):
+        if tok.pos_ in ("VERB", "AUX") and tok.morph.get("Person"):
+            candidates.append(tok)
+
+    if not candidates:
+        return None
+
+    # prefer auxiliary verbs because they usually
+    # carry the grammatical person/tense information
+    for tok in candidates:
+        if tok.dep_.startswith("aux"):
+            return tok
+
+    return candidates[0]
+
+def has_dative_experiencer(token):
+    """Detect dative experiencers to avoid incorrect third-person subject inference."""
+    for tok in token.subtree:
+        if tok.lemma_.lower() in ("ja", "ty", "my", "wy"):
+            if "Dat" in tok.morph.get("Case", []):
+                return True
+
+    return False
 
 def is_clause_root(token):
     """Determines if a token is a clause root"""
@@ -134,23 +209,19 @@ def is_clause_root(token):
 
     return False
 
-
 def split_into_clauses(sentence):
     """Split a sentence into clauses based on dependency parsing"""
 
     return [token for token in sentence if is_clause_root(token)]
 
-
 def get_clause_tokens(root):
     """Collect tokens belonging only to the clause headed by the given root"""
 
     tokens = []
-
     for tok in root.subtree:
         # Ignore nested clause heads
         if tok != root and is_clause_root(tok):
             continue
-
         skip = False
         for anc in tok.ancestors:
             # Stop when we reach the current clause root
@@ -167,7 +238,6 @@ def get_clause_tokens(root):
 
     # Sort tokens by their original position in the sentence
     return sorted(tokens, key=lambda t: t.i)
-
 
 def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers, question_words):
     """Recursively collect subjects, objects, adverbials, and predicate modifiers for a given clause root"""
@@ -210,7 +280,6 @@ def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers
             objects.append(parse_token_for_json(child))
             collect_dependents(child, subjects, objects, adverbials, predicate_modifiers, question_words)
 
-
 def build_clause_pjm(token, clause_type):
     """Build the PJM gloss sequence for a clause based on its root and dependents"""
 
@@ -221,6 +290,19 @@ def build_clause_pjm(token, clause_type):
     question_words = []
 
     collect_dependents(token, subjects, objects, adverbials, predicate_modifiers,question_words)
+
+    # Infer hidden subjects (JA, TY, MY, WY, ON) from verb inflection if the clause has no explicit subject
+    if not subjects:
+        if not has_dative_experiencer(token):
+            finite_controller = get_finite_controller(token)
+
+            inferred_subject = infer_subject_from_verb(
+                finite_controller,
+                allow_third_person=clause_type != "question"
+            )
+
+            if inferred_subject:
+                subjects.append(inferred_subject)
 
     main_verb_data = parse_token_for_json(token)
     tense = get_tense(token)
@@ -256,7 +338,7 @@ def build_clause_pjm(token, clause_type):
     if clause_type != "question":
         question_words = []
 
-    # Ordering the glosses: Adverbial -> Subject -> Object -> Verb
+    # Ordering the glosses: Subject -> Adverbial -> Object -> Verb
     verb_element = [main_verb_data] + predicate_modifiers
     clause_pjm = subjects + adverbials + objects + verb_element + question_words
 
@@ -299,7 +381,6 @@ def parse_token_for_json(token):
 
     return token_data
 
-
 def get_noun_phrase(head_token, question_words=None):
     """Gets the head word and all its modifiers"""
 
@@ -330,7 +411,6 @@ def get_noun_phrase(head_token, question_words=None):
 
     return numbers + [parse_token_for_json(head_token)] + after_head
 
-
 def extract_negated_base_form(token):
     """Detect negated adjectives like 'niezadowolony', 'niemiły'."""
 
@@ -349,7 +429,6 @@ def extract_negated_base_form(token):
         return text[3:].upper(), True
 
     return token.lemma_.upper(), False
-
 
 def process_polish_text(text: str) -> dict:
     """Main function to process Polish text and return structured data for PJM translation"""

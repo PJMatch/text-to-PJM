@@ -113,6 +113,84 @@ def get_tense(token):
         return "future"
     return "present"
 
+def infer_subject_from_verb(token, allow_third_person=False):
+    """Recover hidden Polish subject from verb morphology."""
+
+    if token is None:
+        return None
+
+    person = token.morph.get("Person")
+    number = token.morph.get("Number")
+    gender = token.morph.get("Gender")
+
+    if not person:
+        return None
+
+    person = person[0]
+    number = number[0] if number else None
+
+    if person == "1":
+        gloss = "JA" if number == "Sing" else "MY"
+
+    elif person == "2":
+        gloss = "TY" if number == "Sing" else "WY"
+
+    elif person == "3":
+        if not allow_third_person:
+            return None
+
+        if number == "Sing":
+            if gender and gender[0] == "Fem":
+                gloss = "ONA"
+            elif gender and gender[0] == "Neut":
+                gloss = "ONO"
+            else:
+                gloss = "ON"
+        else:
+            gloss = "ONI"
+
+    else:
+        return None
+
+    return {
+        "type": "sign",
+        "gloss": gloss
+    }
+
+def get_clause_subtree_tokens(token):
+    return sorted(list(token.subtree), key=lambda t: t.i)
+
+
+def get_finite_controller(token):
+    """Finds the finite verb or auxiliary that carries grammatical person/number information for the clause."""
+
+    candidates = []
+
+    # Look for verbs and auxiliaries in the subtree of the clause root
+    for tok in get_clause_subtree_tokens(token):
+        if tok.pos_ in ("VERB", "AUX") and tok.morph.get("Person"):
+            candidates.append(tok)
+
+    if not candidates:
+        return None
+
+    # prefer auxiliary verbs because they usually
+    # carry the grammatical person/tense information
+    for tok in candidates:
+        if tok.dep_.startswith("aux"):
+            return tok
+
+    return candidates[0]
+
+def has_dative_experiencer(token):
+    """Detect dative experiencers to avoid incorrect third-person subject inference."""
+    for tok in token.subtree:
+        if tok.lemma_.lower() in ("ja", "ty", "my", "wy"):
+            if "Dat" in tok.morph.get("Case", []):
+                return True
+
+    return False
+
 def is_clause_root(token):
     """Determines if a token is a clause root"""
 
@@ -213,6 +291,19 @@ def build_clause_pjm(token, clause_type):
 
     collect_dependents(token, subjects, objects, adverbials, predicate_modifiers,question_words)
 
+    # Infer hidden subjects (JA, TY, MY, WY, ON) from verb inflection if the clause has no explicit subject
+    if not subjects:
+        if not has_dative_experiencer(token):
+            finite_controller = get_finite_controller(token)
+
+            inferred_subject = infer_subject_from_verb(
+                finite_controller,
+                allow_third_person=clause_type != "question"
+            )
+
+            if inferred_subject:
+                subjects.append(inferred_subject)
+
     main_verb_data = parse_token_for_json(token)
     tense = get_tense(token)
 
@@ -247,7 +338,7 @@ def build_clause_pjm(token, clause_type):
     if clause_type != "question":
         question_words = []
 
-    # Ordering the glosses: Adverbial -> Subject -> Object -> Verb
+    # Ordering the glosses: Subject -> Adverbial -> Object -> Verb
     verb_element = [main_verb_data] + predicate_modifiers
     clause_pjm = subjects + adverbials + objects + verb_element + question_words
 
