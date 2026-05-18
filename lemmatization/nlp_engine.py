@@ -27,6 +27,7 @@ FORCED_CLAUSE_ROOTS = {"DZIENDOBRY", "DOWIDZENIA"}
 
 NEGATED_VERBS_MAP = {
     "ROZUMIEĆ": "NIE_ROZUMIEĆ",
+    "WIEDZIEĆ": "NIE_WIEDZIEĆ",
 }
 
 QUESTION_WORDS = {
@@ -113,7 +114,7 @@ def get_tense(token):
         return "future"
     return "present"
 
-def infer_subject_from_verb(token, allow_third_person=False):
+def infer_subject_from_verb(token):
     """Recover hidden Polish subject from verb morphology."""
 
     if token is None:
@@ -121,7 +122,6 @@ def infer_subject_from_verb(token, allow_third_person=False):
 
     person = token.morph.get("Person")
     number = token.morph.get("Number")
-    gender = token.morph.get("Gender")
 
     if not person:
         return None
@@ -135,21 +135,7 @@ def infer_subject_from_verb(token, allow_third_person=False):
     elif person == "2":
         gloss = "TY" if number == "Sing" else "WY"
 
-    elif person == "3":
-        if not allow_third_person:
-            return None
-
-        if number == "Sing":
-            if gender and gender[0] == "Fem":
-                gloss = "ONA"
-            elif gender and gender[0] == "Neut":
-                gloss = "ONO"
-            else:
-                gloss = "ON"
-        else:
-            gloss = "ONI"
-
-    else:
+    else: # got rid of 3rd person - useless and lead to bugs
         return None
 
     return {
@@ -296,10 +282,7 @@ def build_clause_pjm(token, clause_type):
         if not has_dative_experiencer(token):
             finite_controller = get_finite_controller(token)
 
-            inferred_subject = infer_subject_from_verb(
-                finite_controller,
-                allow_third_person=clause_type != "question"
-            )
+            inferred_subject = infer_subject_from_verb(finite_controller,)
 
             if inferred_subject:
                 subjects.append(inferred_subject)

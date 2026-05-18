@@ -27,6 +27,7 @@ FORCED_CLAUSE_ROOTS = {"DZIENDOBRY", "DOWIDZENIA"}
 
 NEGATED_VERBS_MAP = {
     "ROZUMIEĆ": "NIE_ROZUMIEĆ",
+    "WIEDZIEĆ": "NIE_WIEDZIEĆ",
 }
 
 QUESTION_WORDS = {
@@ -113,7 +114,7 @@ def get_tense(token):
         return "future"
     return "present"
 
-def infer_subject_from_verb(token, allow_third_person=False):
+def infer_subject_from_verb(token):
     """Recover hidden Polish subject from verb morphology."""
 
     if token is None:
@@ -121,7 +122,6 @@ def infer_subject_from_verb(token, allow_third_person=False):
 
     person = token.morph.get("Person")
     number = token.morph.get("Number")
-    gender = token.morph.get("Gender")
 
     if not person:
         return None
@@ -135,21 +135,7 @@ def infer_subject_from_verb(token, allow_third_person=False):
     elif person == "2":
         gloss = "TY" if number == "Sing" else "WY"
 
-    elif person == "3":
-        if not allow_third_person:
-            return None
-
-        if number == "Sing":
-            if gender and gender[0] == "Fem":
-                gloss = "ONA"
-            elif gender and gender[0] == "Neut":
-                gloss = "ONO"
-            else:
-                gloss = "ON"
-        else:
-            gloss = "ONI"
-
-    else:
+    else: # got rid of 3rd person - useless and lead to bugs
         return None
 
     return {
@@ -296,10 +282,7 @@ def build_clause_pjm(token, clause_type):
         if not has_dative_experiencer(token):
             finite_controller = get_finite_controller(token)
 
-            inferred_subject = infer_subject_from_verb(
-                finite_controller,
-                allow_third_person=clause_type != "question"
-            )
+            inferred_subject = infer_subject_from_verb(finite_controller,)
 
             if inferred_subject:
                 subjects.append(inferred_subject)
@@ -476,6 +459,7 @@ def process_polish_text(text: str) -> dict:
         "clauses": clauses
     }
 
+
 #=============================== VERIFY  OUTPUT ======================================
 
 def load_sentences_from_file(file_path="sentences.txt"):
@@ -502,7 +486,6 @@ def pjm_sequence_to_text(pjm_sequence):
             gloss += f" [{item.get('tense').upper()}]"
 
         glosses.append(gloss)
-
     return " ".join(glosses)
 
 
@@ -511,11 +494,12 @@ def save_lemmatization_results(
     output_txt_file="lemmatization_results.txt"
 ):
     sentences = load_sentences_from_file(sentences_file)
-
+    sentence_count = 0
+    
     with open(output_txt_file, "w", encoding="utf-8") as txt_file:
         for sentence in sentences:
             result = process_polish_text(sentence)
-
+            sentence_count += 1
             txt_file.write(f"text: {sentence}\n")
 
             for index, clause in enumerate(result["clauses"], start=1):
@@ -527,6 +511,8 @@ def save_lemmatization_results(
                 txt_file.write(f"lemmatization: {readable_pjm}\n")
 
             txt_file.write("\n" + "-" * 60 + "\n\n")
+        
+            print(f"Progress: {sentence_count}/{len(sentences)} sentences processed")
 
     print(f"Saved TXT results to: {output_txt_file}")
 

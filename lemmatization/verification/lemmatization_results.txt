@@ -34,7 +34,7 @@ text: Mój brat ma nowego kota, który bardzo lubi dużo spać.
 clause 1 type: statement
 lemmatization: BRAT KOT NOWY MIEĆ
 clause 2 type: statement
-lemmatization: ON BARDZO SPAĆ DUŻO LUBIĆ
+lemmatization: BARDZO SPAĆ DUŻO LUBIĆ
 
 ------------------------------------------------------------
 
@@ -194,7 +194,7 @@ text: On nie słyszy, ale bardzo dobrze widzi.
 clause 1 type: negation
 lemmatization: ON SŁYSZEĆ [NEG]
 clause 2 type: statement
-lemmatization: ON DOBRZE BARDZO WIDZIEĆ
+lemmatization: DOBRZE BARDZO WIDZIEĆ
 
 ------------------------------------------------------------
 
@@ -268,9 +268,9 @@ text: Mężczyzna nie słyszy, ale myśli i miga.
 clause 1 type: negation
 lemmatization: MĘŻCZYZNA SŁYSZEĆ [NEG]
 clause 2 type: statement
-lemmatization: ON MYŚLEĆ
+lemmatization: MYŚLEĆ
 clause 3 type: statement
-lemmatization: ON MIGAĆ
+lemmatization: MIGAĆ
 
 ------------------------------------------------------------
 
@@ -296,7 +296,7 @@ text: Brat ma kota i chce mieć małego psa.
 clause 1 type: statement
 lemmatization: BRAT KOT MIEĆ
 clause 2 type: statement
-lemmatization: ON MIEĆ PIES MAŁY CHCIEĆ
+lemmatization: MIEĆ PIES MAŁY CHCIEĆ
 
 ------------------------------------------------------------
 
@@ -600,7 +600,7 @@ lemmatization: ON DZISIAJ BARDZO CHORY DLACZEGO
 
 text: Ja nie wiem, dlaczego on nie chce dzisiaj pomóc.
 clause 1 type: negation
-lemmatization: JA WIEDZIEĆ [NEG]
+lemmatization: JA NIE_WIEDZIEĆ
 clause 2 type: question
 lemmatization: ON DZISIAJ POMÓC CHCIEĆ [NEG] DLACZEGO
 
@@ -634,9 +634,9 @@ text: Jak on chce migać, kiedy nie widzi i nie słyszy?
 clause 1 type: question
 lemmatization: ON MIGAĆ CHCIEĆ JAK
 clause 2 type: negation
-lemmatization: ON WIDZIEĆ [NEG]
+lemmatization: WIDZIEĆ [NEG]
 clause 3 type: negation
-lemmatization: ON SŁYSZEĆ [NEG]
+lemmatization: SŁYSZEĆ [NEG]
 
 ------------------------------------------------------------
 
