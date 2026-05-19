@@ -458,3 +458,64 @@ def process_polish_text(text: str) -> dict:
         "text": text,
         "clauses": clauses
     }
+
+
+#=============================== VERIFY  OUTPUT ======================================
+
+def load_sentences_from_file(file_path="sentences.txt"):
+    with open(file_path, "r", encoding="utf-8") as file:
+        sentences = [
+            line.strip()
+            for line in file
+            if line.strip()
+        ]
+
+    return sentences
+
+
+def pjm_sequence_to_text(pjm_sequence):
+    glosses = []
+
+    for item in pjm_sequence:
+        gloss = item.get("gloss", "")
+
+        if item.get("is_negated"):
+            gloss += " [NEG]"
+
+        if item.get("tense"):
+            gloss += f" [{item.get('tense').upper()}]"
+
+        glosses.append(gloss)
+    return " ".join(glosses)
+
+
+def save_lemmatization_results(
+    sentences_file="sentences.txt",
+    output_txt_file="lemmatization_results.txt"
+):
+    sentences = load_sentences_from_file(sentences_file)
+    sentence_count = 0
+    
+    with open(output_txt_file, "w", encoding="utf-8") as txt_file:
+        for sentence in sentences:
+            result = process_polish_text(sentence)
+            sentence_count += 1
+            txt_file.write(f"text: {sentence}\n")
+
+            for index, clause in enumerate(result["clauses"], start=1):
+                sentence_type = clause["sentence_type"]
+                pjm_sequence = clause["pjm_sequence"]
+                readable_pjm = pjm_sequence_to_text(pjm_sequence)
+
+                txt_file.write(f"clause {index} type: {sentence_type}\n")
+                txt_file.write(f"lemmatization: {readable_pjm}\n")
+
+            txt_file.write("\n" + "-" * 60 + "\n\n")
+        
+            print(f"Progress: {sentence_count}/{len(sentences)} sentences processed")
+
+    print(f"Saved TXT results to: {output_txt_file}")
+
+
+if __name__ == "__main__":
+    save_lemmatization_results()
