@@ -65,6 +65,37 @@ def remove_polish_chars(text: str) -> str:
     text = text.replace("Ł", "L")
     return text
 
+PJM_DIGRAPHS = {"CH", "CZ", "RZ", "SZ", "DZ"}
+
+PJM_DIACRITICS = {
+    "Ą": "AA",
+    "Ć": "CC",
+    "Ę": "EE",
+    "Ł": "LL",
+    "Ń": "NN",
+    "Ó": "OO",
+    "Ś": "SS",
+    "Ż": "ZZ",
+    "Ź": "ZZZ"
+}
+
+def get_fingerspell_tokens(word: str) -> List[str]:
+    """Splits a word into PJM fingerspelling tokens (handles digraphs and diacritics)."""
+    word = word.upper()
+    tokens = []
+    i = 0
+    while i < len(word):
+        # Check for 2-letter digraphs first
+        if i + 1 < len(word) and word[i:i+2] in PJM_DIGRAPHS:
+            tokens.append(word[i:i+2])
+            i += 2
+        else:
+            char = word[i]
+            # Convert diacritics (e.g., 'Ż' -> 'ZZ'), or keep the char if not in dict
+            tokens.append(PJM_DIACRITICS.get(char, char))
+            i += 1
+    return tokens
+
 def map_gloss_to_animation(gloss_item: GlossItem, sentence_type: Optional[str] = None) -> AnimationItem:
     gloss = gloss_item.gloss.upper()
     animation_name = remove_polish_chars(gloss)
@@ -97,13 +128,12 @@ def translate_text_to_animations(request: TextRequest):
             for gloss_item in clause.pjm_sequence:
                 
                 # Special handling for fingerspelling
-                if gloss_item.type == "fingerspell" and gloss_item.letters:
-                    for letter in gloss_item.letters:
-                        letter_upper = letter.upper()
-                        # Map each letter to its corresponding animation
+                if gloss_item.type == "fingerspell":
+                    tokens = get_fingerspell_tokens(gloss_item.gloss)
+                    for token in tokens:
                         animations.append(AnimationItem(
-                            gloss=letter_upper,
-                            animation=remove_polish_chars(letter_upper),
+                            gloss=token,
+                            animation=remove_polish_chars(token),
                             type="fingerspell",
                             sentence_type=clause.sentence_type
                         ))
@@ -112,10 +142,11 @@ def translate_text_to_animations(request: TextRequest):
 
                     # If the animation is not available, fallback to fingerspelling each letter of the gloss
                     if animation_item.animation.upper() not in AVAILABLE_ANIMATIONS:
-                        for letter in gloss_item.gloss.upper():
+                        tokens = get_fingerspell_tokens(gloss_item.gloss)
+                        for token in tokens:
                             animations.append(AnimationItem(
-                                gloss=letter,
-                                animation=remove_polish_chars(letter),
+                                gloss=token,
+                                animation=remove_polish_chars(token),
                                 type="fingerspell",
                                 sentence_type=clause.sentence_type
                             ))
