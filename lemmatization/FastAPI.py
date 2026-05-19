@@ -96,6 +96,15 @@ def get_fingerspell_tokens(word: str) -> List[str]:
             i += 1
     return tokens
 
+def split_pjm_numbers(gloss: str) -> List[str]:
+    """Splits numbers 21-59 into tens and units (e.g., '34' -> ['30', '4'])."""
+    if gloss.isdigit():
+        val = int(gloss)
+        # Check if the number is between 21 and 59, and is not a round ten (30, 40, 50)
+        if 20 < val < 60 and val % 10 != 0:
+            return [str((val // 10) * 10), str(val % 10)]
+    return [gloss]
+
 def map_gloss_to_animation(gloss_item: GlossItem, sentence_type: Optional[str] = None) -> AnimationItem:
     gloss = gloss_item.gloss.upper()
     animation_name = remove_polish_chars(gloss)
@@ -139,20 +148,33 @@ def translate_text_to_animations(request: TextRequest):
                         ))
                 else:
                     animation_item = map_gloss_to_animation(gloss_item, clause.sentence_type)
-
-                    # If the animation is not available, fallback to fingerspelling each letter of the gloss
-                    if animation_item.animation.upper() not in AVAILABLE_ANIMATIONS:
-                        tokens = get_fingerspell_tokens(gloss_item.gloss)
-                        for token in tokens:
-                            animations.append(AnimationItem(
-                                gloss=token,
-                                animation=remove_polish_chars(token),
-                                type="fingerspell",
-                                sentence_type=clause.sentence_type
-                            ))
-                    else:
-                        animations.append(animation_item)
-
+                    
+                    sub_glosses = split_pjm_numbers(gloss_item.gloss)
+                    
+                    for sg in sub_glosses:
+                        # Create a temporary item for the split gloss
+                        temp_gloss_item = GlossItem(
+                            type=gloss_item.type,
+                            gloss=sg,
+                            tense=gloss_item.tense,
+                            is_negated=gloss_item.is_negated,
+                            is_plural=gloss_item.is_plural
+                        )
+                        
+                        animation_item = map_gloss_to_animation(temp_gloss_item, clause.sentence_type)
+                        
+                        # If the animation is not available, fallback to fingerspelling each letter of the gloss
+                        if animation_item.animation.upper() not in AVAILABLE_ANIMATIONS:
+                            tokens = get_fingerspell_tokens(temp_gloss_item.gloss)
+                            for token in tokens:
+                                animations.append(AnimationItem(
+                                    gloss=token,
+                                    animation=remove_polish_chars(token),
+                                    type="fingerspell",
+                                    sentence_type=clause.sentence_type
+                                ))
+                        else:
+                            animations.append(animation_item)
         return animations
 
     except Exception as e:
