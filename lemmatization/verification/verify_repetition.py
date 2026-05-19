@@ -3,6 +3,7 @@ import spacy_stanza
 import warnings
 import logging
 import re
+import matplotlib.pyplot as plt
 
 warnings.filterwarnings("ignore")
 logging.getLogger('stanza').setLevel(logging.ERROR)
@@ -27,6 +28,7 @@ FORCED_CLAUSE_ROOTS = {"DZIENDOBRY", "DOWIDZENIA"}
 
 NEGATED_VERBS_MAP = {
     "ROZUMIEĆ": "NIE_ROZUMIEĆ",
+    "WIEDZIEĆ": "NIE_WIEDZIEĆ",
 }
 
 QUESTION_WORDS = {
@@ -457,3 +459,126 @@ def process_polish_text(text: str) -> dict:
         "text": text,
         "clauses": clauses
     }
+
+
+#=============================== VERIFY  OUTPUT ======================================
+
+def load_sentences_from_file(file_path="sentences.txt"):
+    with open(file_path, "r", encoding="utf-8") as file:
+        sentences = [
+            line.strip()
+            for line in file
+            if line.strip()
+        ]
+
+    return sentences
+
+
+def pjm_sequence_to_text(pjm_sequence):
+    glosses = []
+
+    for item in pjm_sequence:
+        gloss = item.get("gloss", "")
+
+        if item.get("is_negated"):
+            gloss += " [NEG]"
+
+        if item.get("tense"):
+            gloss += f" [{item.get('tense').upper()}]"
+
+        glosses.append(gloss)
+    return " ".join(glosses)
+
+
+def save_lemmatization_results(
+    sentences_file="sentences.txt",
+    output_txt_file="lemmatization_results.txt"
+):
+    sentences = load_sentences_from_file(sentences_file)
+    sentence_count = 0
+    
+    with open(output_txt_file, "w", encoding="utf-8") as txt_file:
+        for sentence in sentences:
+            result = process_polish_text(sentence)
+            sentence_count += 1
+            txt_file.write(f"text: {sentence}\n")
+
+            for index, clause in enumerate(result["clauses"], start=1):
+                sentence_type = clause["sentence_type"]
+                pjm_sequence = clause["pjm_sequence"]
+                readable_pjm = pjm_sequence_to_text(pjm_sequence)
+
+                txt_file.write(f"clause {index} type: {sentence_type}\n")
+                txt_file.write(f"lemmatization: {readable_pjm}\n")
+
+            txt_file.write("\n" + "-" * 60 + "\n\n")
+        
+            print(f"Progress: {sentence_count}/{len(sentences)} sentences processed")
+
+    print(f"Saved TXT results to: {output_txt_file}")
+
+def result_to_text(result):
+    clauses_text = []
+
+    for clause in result["clauses"]:
+        sentence_type = clause["sentence_type"]
+        readable_pjm = pjm_sequence_to_text(clause["pjm_sequence"])
+        clauses_text.append(f"{sentence_type}: {readable_pjm}")
+
+    return " | ".join(clauses_text)
+
+def draw_repeatability_chart(results):
+    labels = [f"Zdanie {i + 1}" for i in range(len(results))]
+    values = [item["percentage"] for item in results]
+
+    plt.figure(figsize=(10, 5))
+    plt.bar(labels, values)
+    plt.ylim(0, 100)
+    plt.ylabel("Powtarzalność (%)")
+    plt.title("Powtarzalność wyników dla 10 przykładowych zdań")
+    plt.tight_layout()
+    plt.savefig("repeatability.png")
+    plt.show()
+
+
+def verify_repeated_outputs(
+    sentences_file="sentences.txt",
+    repeats=20,
+    output_file="repeatability_results.txt"
+):
+    sentences = load_sentences_from_file(sentences_file)[:10]
+    results = []
+
+    with open(output_file, "w", encoding="utf-8") as file:
+        for sentence in sentences:
+            base_output = result_to_text(process_polish_text(sentence))
+            same_count = 0
+
+            for _ in range(repeats):
+                current_output = result_to_text(process_polish_text(sentence))
+
+                if current_output == base_output:
+                    same_count += 1
+
+            percentage = (same_count / repeats) * 100
+
+            results.append({
+                "sentence": sentence,
+                "percentage": percentage
+            })
+
+            file.write(f"text: {sentence}\n")
+            file.write(f"repeatability: {percentage}%\n")
+            file.write(f"output: {base_output}\n")
+            file.write("-" * 60 + "\n\n")
+
+            print(f"{sentence} -> {percentage}%")
+
+    draw_repeatability_chart(results)
+
+    print(f"Saved repeatability results to: {output_file}")
+    print("Saved chart to: repeatability.png")
+
+
+if __name__ == "__main__":
+    verify_repeated_outputs(repeats = 20)

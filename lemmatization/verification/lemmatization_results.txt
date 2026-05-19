@@ -724,3 +724,19 @@ lemmatization: MY NAGRYWKA MIEĆ
 
 ------------------------------------------------------------
 
+text: Nie wiem o co mu chodzi.
+clause 1 type: negation
+lemmatization: JA NIE_WIEDZIEĆ
+clause 2 type: statement
+lemmatization: ON CHODZIĆ
+
+------------------------------------------------------------
+
+text: Nie rozumiem o co chodzi.
+clause 1 type: negation
+lemmatization: JA NIE_ROZUMIEĆ
+clause 2 type: statement
+lemmatization: CHODZIĆ
+
+------------------------------------------------------------
+
