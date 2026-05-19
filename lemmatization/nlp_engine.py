@@ -8,7 +8,7 @@ warnings.filterwarnings("ignore")
 logging.getLogger('stanza').setLevel(logging.ERROR)
 
 # loading model only once at the start of the server
-nlp = spacy_stanza.load_pipeline("pl")
+nlp = spacy_stanza.load_pipeline("pl", download_method="REUSE_RESOURCES")
 
 
 EXCEPTIONS = {"WARSZAWA", "FACEBOOK", "POLSKA", "YOUTUBE"}

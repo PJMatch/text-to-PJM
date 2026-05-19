@@ -2,11 +2,27 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from typing import List, Optional
 import unicodedata
+from pathlib import Path
 
 # importing the NLP engine function
 from nlp_engine import process_polish_text
 
+BASE_DIR = Path(__file__).resolve().parent
+ANIMATIONS_DIR = BASE_DIR.parent / "UEProject_5_5" / "Content" / "PjmAnimations"
+
 app = FastAPI(title="PJM Translator API")
+
+# Load all available animation names from .uasset files
+def load_available_animations() -> set[str]:
+    if not ANIMATIONS_DIR.exists():
+        return set()
+
+    return {
+        file.stem.upper()
+        for file in ANIMATIONS_DIR.glob("*.uasset")
+    }
+
+AVAILABLE_ANIMATIONS = load_available_animations()
 
 class GlossItem(BaseModel):
     type: str
@@ -92,7 +108,19 @@ def translate_text_to_animations(request: TextRequest):
                             sentence_type=clause.sentence_type
                         ))
                 else:
-                    animations.append(map_gloss_to_animation(gloss_item, clause.sentence_type))
+                    animation_item = map_gloss_to_animation(gloss_item, clause.sentence_type)
+
+                    # If the animation is not available, fallback to fingerspelling each letter of the gloss
+                    if animation_item.animation.upper() not in AVAILABLE_ANIMATIONS:
+                        for letter in gloss_item.gloss.upper():
+                            animations.append(AnimationItem(
+                                gloss=letter,
+                                animation=remove_polish_chars(letter),
+                                type="fingerspell",
+                                sentence_type=clause.sentence_type
+                            ))
+                    else:
+                        animations.append(animation_item)
 
         return animations
 
