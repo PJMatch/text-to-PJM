@@ -8,7 +8,7 @@ from pathlib import Path
 from nlp_engine import process_polish_text
 
 BASE_DIR = Path(__file__).resolve().parent
-ANIMATIONS_DIR = BASE_DIR.parent / "UEProject_5_5" / "Content" / "PjmAnimations"
+ANIMATIONS_DIR = BASE_DIR.parent / "UEProject_5_5" / "Content" / "PjmAnimations_O"
 
 app = FastAPI(title="PJM Translator API")
 
