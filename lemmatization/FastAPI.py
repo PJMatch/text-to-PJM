@@ -24,6 +24,12 @@ def load_available_animations() -> set[str]:
 
 AVAILABLE_ANIMATIONS = load_available_animations()
 
+AVAILABLE_ANIMATIONS.add("ONA")
+AVAILABLE_ANIMATIONS.add("ONO")
+AVAILABLE_ANIMATIONS.add("KOLEZANKA")
+AVAILABLE_ANIMATIONS.add("OK")
+AVAILABLE_ANIMATIONS.add("DZISIAJ")
+
 class GlossItem(BaseModel):
     type: str
     gloss: str
