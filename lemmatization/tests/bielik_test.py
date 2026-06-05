@@ -2,6 +2,7 @@ from llama_cpp import Llama
 import time
 
 def translate_to_pjm(text):
+    """Loads the local Bielik GGUF model and translates Polish text into PJM sequence."""
     start_load = time.perf_counter()
 
     try:

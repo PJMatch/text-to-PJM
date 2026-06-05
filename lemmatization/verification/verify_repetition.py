@@ -145,6 +145,7 @@ def infer_subject_from_verb(token):
     }
 
 def get_clause_subtree_tokens(token):
+    """Gets all words that belong to the same clause as the given token."""
     return sorted(list(token.subtree), key=lambda t: t.i)
 
 
@@ -464,6 +465,7 @@ def process_polish_text(text: str) -> dict:
 #=============================== VERIFY  OUTPUT ======================================
 
 def load_sentences_from_file(file_path="sentences.txt"):
+    """Reads sentences from a text file and returns them as a list."""
     with open(file_path, "r", encoding="utf-8") as file:
         sentences = [
             line.strip()
@@ -475,6 +477,7 @@ def load_sentences_from_file(file_path="sentences.txt"):
 
 
 def pjm_sequence_to_text(pjm_sequence):
+    """Converts PJM gloss items into one text line with negation and tense markers."""
     glosses = []
 
     for item in pjm_sequence:
@@ -494,6 +497,7 @@ def save_lemmatization_results(
     sentences_file="sentences.txt",
     output_txt_file="lemmatization_results.txt"
 ):
+    """Reads sentences from a file, processes them with the NLP engine, and saves readable PJM results."""
     sentences = load_sentences_from_file(sentences_file)
     sentence_count = 0
     
@@ -518,6 +522,7 @@ def save_lemmatization_results(
     print(f"Saved TXT results to: {output_txt_file}")
 
 def result_to_text(result):
+    """Converts the NLP result into one readable text line with clause types and PJM sequences."""
     clauses_text = []
 
     for clause in result["clauses"]:
@@ -528,6 +533,7 @@ def result_to_text(result):
     return " | ".join(clauses_text)
 
 def draw_repeatability_chart(results):
+    """Draws and saves a bar chart showing repeatability percentage for each sentence."""
     labels = [f"Zdanie {i + 1}" for i in range(len(results))]
     values = [item["percentage"] for item in results]
 
@@ -546,6 +552,7 @@ def verify_repeated_outputs(
     repeats=20,
     output_file="repeatability_results.txt"
 ):
+    """Checks if repeated NLP processing returns the same output and saves repeatability results."""
     sentences = load_sentences_from_file(sentences_file)[:10]
     results = []
 

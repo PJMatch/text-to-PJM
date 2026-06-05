@@ -143,6 +143,7 @@ def infer_subject_from_verb(token):
     }
 
 def get_clause_subtree_tokens(token):
+    """Gets all words that belong to the same clause as the given token."""
     return sorted(list(token.subtree), key=lambda t: t.i)
 
 

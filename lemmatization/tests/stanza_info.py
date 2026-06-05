@@ -8,12 +8,14 @@ logging.getLogger('stanza').setLevel(logging.ERROR)
 nlp = spacy_stanza.load_pipeline("pl")
 
 def lemmatize(text: str):
+    """Returns tokens and lemmas for the given text."""
     doc = nlp(text)
     tokens = [t for t in doc if not t.is_space]
     lemmas = [t.lemma_ for t in tokens]
     return doc, tokens, lemmas
 
 def pretty_token_info(doc):
+    """Prints token details such as lemma, POS tag, dependency relation, and head token."""
     print("\nToken analysis (POS + DEP + HEAD):")
     print(f"{'Token':<15} {'Lemma':<15} {'POS':<6} {'DEP':<12} {'HEAD':<15}")
     for t in doc:
@@ -22,6 +24,7 @@ def pretty_token_info(doc):
         print(f"{t.text:<15} {t.lemma_:<15} {t.pos_:<6} {t.dep_:<12} {t.head.text:<15}")
 
 def find_roles(doc):
+    """Detects and prints verbs, subjects, objects, negations, and verb-dependent elements."""
     verbs = [t for t in doc if t.pos_ in ("VERB", "AUX")]
 
     subjects = [t for t in doc if t.dep_ in ("nsubj", "nsubj:pass", "csubj")]
@@ -55,6 +58,7 @@ def find_roles(doc):
         print(f"  adverbial: {join(v_adv)}")
 
 def show_dependency_tree(doc):
+    """Prints dependency relations between each token and its head token."""
     print("\nDependency relations (token --DEP--> head):")
     for t in doc:
         if t.is_space:

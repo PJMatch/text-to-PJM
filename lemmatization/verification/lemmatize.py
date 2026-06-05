@@ -10,6 +10,7 @@ nlp = spacy_stanza.load_pipeline("pl")
 CLAUSE_DEPS = {"root", "conj", "advcl", "ccomp", "parataxis"}
 
 def is_clause_root(token):
+    """Determines if a token is a clause root"""
     if token.dep_ == "root":
         return True
     
@@ -19,9 +20,11 @@ def is_clause_root(token):
     return False
 
 def split_into_clauses(sentence):
+    """Split a sentence into clauses based on dependency parsing"""
     return [token for token in sentence if is_clause_root(token)]
 
 def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers):
+    """Recursively collect subjects, objects, adverbials, and predicate modifiers for a given clause root"""
     for child in token.children:
         if child.is_punct or child.pos_ in ("ADP", "CCONJ", "SCONJ", "PART"):
             continue
@@ -38,7 +41,8 @@ def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers
             objects.append(get_lemma(child))
             collect_dependents(child, subjects, objects, adverbials, predicate_modifiers)
 
-def build_clause_pjm(token):    
+def build_clause_pjm(token):
+    """Build the PJM gloss sequence for a clause based on its dependents"""    
     subjects = []
     objects = []
     adverbials = []
@@ -54,9 +58,11 @@ def build_clause_pjm(token):
     return clause_pjm
 
 def get_lemma(token):
+    """Returns the uppercase lemma of a token."""
     return token.lemma_.upper()
     
 def get_noun_phrase(head_token):
+    """Builds a noun phrase from the head token and its relevant child tokens."""
     elements = [get_lemma(head_token)]
     for sub in head_token.children:
         if sub.is_punct or sub.pos_ in ("ADP", "CCONJ", "SCONJ", "PART"):

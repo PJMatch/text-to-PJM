@@ -12,8 +12,8 @@ ANIMATIONS_DIR = BASE_DIR.parent / "UEProject_5_5" / "Content" / "PjmAnimations_
 
 app = FastAPI(title="PJM Translator API")
 
-# Load all available animation names from .uasset files
 def load_available_animations() -> set[str]:
+    """ Loads available animation names from .uasset files in the animation directory. """
     if not ANIMATIONS_DIR.exists():
         return set()
 
@@ -64,6 +64,7 @@ class TextRequest(BaseModel):
     text: str
 
 def remove_polish_chars(text: str) -> str:
+    """Removes Polish diacritical marks from text to match animation file names."""
     text = unicodedata.normalize('NFKD', text)
     # Remove diacritical marks (accents) to get base characters (normalize returns the base character and its accent)
     text = "".join(c for c in text if not unicodedata.combining(c))
@@ -112,6 +113,7 @@ def split_pjm_numbers(gloss: str) -> List[str]:
     return [gloss]
 
 def map_gloss_to_animation(gloss_item: GlossItem, sentence_type: Optional[str] = None) -> AnimationItem:
+    """Maps a gloss item to an animation name by uppercasing it, removing Polish characters, and keeping its metadata."""
     gloss = gloss_item.gloss.upper()
     animation_name = remove_polish_chars(gloss)
 
@@ -127,11 +129,13 @@ def map_gloss_to_animation(gloss_item: GlossItem, sentence_type: Optional[str] =
 
 @app.get("/")
 def root():
+    """Checks if the PJM Translator API is running."""
     return {"message": "PJM Translator API works"}
 
 # Main endpoint for translating text to animations
 @app.post("/translate", response_model=List[AnimationItem])
 def translate_text_to_animations(request: TextRequest):
+    """Translates Polish text into PJM animation items, including number splitting and fingerspelling fallback."""
     try:
         # Polish text to structured gloss data
         raw_gloss_data = process_polish_text(request.text)

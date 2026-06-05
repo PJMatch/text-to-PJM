@@ -25,8 +25,8 @@ DEFAULT_TEXTS = [
     "Mój kolega z pracy jest bardzo miły i zawsze chętnie pomaga innym, gdy mają problemy z komputerem.",
 ]
 
-#Loading models
 def load_pipeline(model_name: str):
+    """Loads the selected NLP pipeline and handles the custom Polish spacy-stanza model."""
 
     if model_name == "spacy_stanza_pl":
         try:
@@ -42,8 +42,8 @@ def load_pipeline(model_name: str):
 
     return spacy.load(model_name)
 
-#collecting lemma outputs for all models and texts (for comparison in the final JSON)
 def collect_lemma_outputs(models: list[str], texts: list[str]) -> dict:
+    """Collects lemma outputs for all models and texts (for comparison in the final JSON)"""
     lemma_outputs = {}
 
     for model_name in models:
@@ -66,8 +66,8 @@ def collect_lemma_outputs(models: list[str], texts: list[str]) -> dict:
 
     return lemma_outputs
 
-# Saving results to JSON (including lemma outputs for all models and texts)
 def save_results_json(results: list[dict], path: str, args, texts: list[str]):
+    """Saves results to JSON (including lemma outputs for all models and texts)"""
     if not path:
         return
 
@@ -90,6 +90,7 @@ def save_results_json(results: list[dict], path: str, args, texts: list[str]):
 
 
 def bench_model(model_name: str, texts: list[str], repeats: int, warmup: int, lemmatize_only: bool):
+    """Benchmarks an NLP model by measuring load time, processing time, and token throughput."""
     # Loading model
     t0 = time.perf_counter()
     try:
@@ -140,6 +141,7 @@ def bench_model(model_name: str, texts: list[str], repeats: int, warmup: int, le
 
 
 def print_results(results: list[dict]):
+    """Prints benchmark results sorted by token throughput and shows model loading or runtime errors."""
     successful_results = [r for r in results if "error" not in r]
     failed_results = [r for r in results if "error" in r]
 
@@ -174,6 +176,7 @@ def print_results(results: list[dict]):
         )
 
 def show_lemma_outputs(models: list[str], texts: list[str]):
+    """Prints lemma outputs for each model and input text for comparison."""
     print("\n" + "=" * 80)
     print("LEMMA OUTPUT COMPARISON")
     print("=" * 80)

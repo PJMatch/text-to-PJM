@@ -144,6 +144,7 @@ def infer_subject_from_verb(token):
     }
 
 def get_clause_subtree_tokens(token):
+    """Gets all words that belong to the same clause as the given token."""
     return sorted(list(token.subtree), key=lambda t: t.i)
 
 
@@ -463,6 +464,7 @@ def process_polish_text(text: str) -> dict:
 #=============================== VERIFY  OUTPUT ======================================
 
 def load_sentences_from_file(file_path="sentences.txt"):
+    """Reads sentences from a text file and returns them as a list."""
     with open(file_path, "r", encoding="utf-8") as file:
         sentences = [
             line.strip()
@@ -474,6 +476,7 @@ def load_sentences_from_file(file_path="sentences.txt"):
 
 
 def pjm_sequence_to_text(pjm_sequence):
+    """Converts PJM gloss items into one text line with negation and tense markers."""
     glosses = []
 
     for item in pjm_sequence:
@@ -493,6 +496,7 @@ def save_lemmatization_results(
     sentences_file="sentences.txt",
     output_txt_file="lemmatization_results.txt"
 ):
+    """Reads sentences from a file, processes them with the NLP engine, and saves readable PJM results."""
     sentences = load_sentences_from_file(sentences_file)
     sentence_count = 0
     
