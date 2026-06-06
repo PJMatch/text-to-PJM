@@ -3,3 +3,4 @@ fastapi
 pydantic
 uvicorn
 torch==2.3.1
+numpy<2

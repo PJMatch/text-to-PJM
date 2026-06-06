@@ -3,32 +3,31 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 import unicodedata
 from pathlib import Path
+import json
+import sys
 
 # importing the NLP engine function
 from nlp_engine import process_polish_text
 
-BASE_DIR = Path(__file__).resolve().parent
-ANIMATIONS_DIR = BASE_DIR.parent / "UEProject_5_5" / "Content" / "PjmAnimations_O"
+def resource_path(relative_path: str) -> Path:
+    """Returns the absolute path to a resource file in development or PyInstaller build."""
+    if hasattr(sys, "_MEIPASS"):
+        return Path(sys._MEIPASS) / relative_path
+    return Path(__file__).resolve().parent / relative_path
+
+ANIMATIONS_INDEX = resource_path("available_animations.json")
 
 app = FastAPI(title="PJM Translator API")
 
 def load_available_animations() -> set[str]:
-    """ Loads available animation names from .uasset files in the animation directory. """
-    if not ANIMATIONS_DIR.exists():
+    """Loads available animation names from a JSON index file."""
+    if not ANIMATIONS_INDEX.exists():
         return set()
 
-    return {
-        file.stem.upper()
-        for file in ANIMATIONS_DIR.glob("*.uasset")
-    }
+    with ANIMATIONS_INDEX.open("r", encoding="utf-8") as f:
+        return {name.upper() for name in json.load(f)}
 
 AVAILABLE_ANIMATIONS = load_available_animations()
-
-AVAILABLE_ANIMATIONS.add("ONA")
-AVAILABLE_ANIMATIONS.add("ONO")
-AVAILABLE_ANIMATIONS.add("KOLEZANKA")
-AVAILABLE_ANIMATIONS.add("OK")
-AVAILABLE_ANIMATIONS.add("DZISIAJ")
 
 class GlossItem(BaseModel):
     type: str
