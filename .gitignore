@@ -7,6 +7,7 @@ __pycache__/
 lemmatization/build/
 lemmatization/dist/
 lemmatization/*.spec
+lemmatization/stanza_resources/
 
 #Unreal
 Build/

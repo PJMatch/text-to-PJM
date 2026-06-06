@@ -3,12 +3,23 @@ import spacy_stanza
 import warnings
 import logging
 import re
+import os
+import sys
+from pathlib import Path
 
 warnings.filterwarnings("ignore")
 logging.getLogger('stanza').setLevel(logging.ERROR)
 
+def resource_path(relative_path: str) -> Path:
+    """Returns the absolute path to a resource file in development or PyInstaller build."""
+    if hasattr(sys, "_MEIPASS"):
+        return Path(sys._MEIPASS) / relative_path
+    return Path(__file__).resolve().parent / relative_path
+
+STANZA_DIR = resource_path("stanza_resources")
+
 # loading model only once at the start of the server
-nlp = spacy_stanza.load_pipeline("pl", download_method="REUSE_RESOURCES")
+nlp = spacy_stanza.load_pipeline("pl", dir=str(STANZA_DIR), download_method="REUSE_RESOURCES")
 
 
 EXCEPTIONS = {"WARSZAWA", "FACEBOOK", "POLSKA", "YOUTUBE"}
