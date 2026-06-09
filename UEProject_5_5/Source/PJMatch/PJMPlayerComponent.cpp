@@ -10,6 +10,13 @@ UPJMPlayerComponent::UPJMPlayerComponent()
     PrimaryComponentTick.bCanEverTick = false;
 }
 
+/**
+ * Initializes the animation player component.
+ *
+ * If TargetBodyMesh is not assigned manually, the component tries to find
+ * a skeletal mesh component on its owner actor. Then it retrieves the
+ * animation instance used for playing montage animations.
+ */
 void UPJMPlayerComponent::BeginPlay()
 {
     Super::BeginPlay();
@@ -37,6 +44,16 @@ void UPJMPlayerComponent::BeginPlay()
     }
 }
 
+
+/**
+ * Starts playing a sequence of animations by their names.
+ *
+ * The function clears any previous playback, looks up every animation name
+ * in the AnimationMap, adds valid animations to the queue, and starts playback
+ * from the first available animation.
+ *
+ * @param AnimationNames List of animation keys to play in order.
+ */
 void UPJMPlayerComponent::PlayAnimationNames(const TArray<FString>& AnimationNames)
 {
     if (!TargetBodyMesh)
@@ -77,6 +94,14 @@ void UPJMPlayerComponent::PlayAnimationNames(const TArray<FString>& AnimationNam
     PlayNext();
 }
 
+
+/**
+ * Plays the next animation from the queue.
+ *
+ * The function removes the first animation from the queue, creates a dynamic
+ * montage from it, and schedules a timer that triggers playback of the next
+ * animation after the current one is almost finished.
+ */
 void UPJMPlayerComponent::PlayNext()
 {
     if (!AnimInstance)
@@ -127,11 +152,23 @@ void UPJMPlayerComponent::PlayNext()
     );
 }
 
+/**
+ * Handles the end of the currently played animation.
+ *
+ * This function is called by the timer after the current animation finishes
+ * and immediately starts the next animation from the queue.
+ */
 void UPJMPlayerComponent::OnCurrentFinished()
 {
     PlayNext();
 }
 
+/**
+ * Stops the current animation playback.
+ *
+ * The function clears the playback timer, empties the animation queue,
+ * and stops all currently playing montages on the animation instance.
+ */
 void UPJMPlayerComponent::StopPlayback()
 {
     if (GetWorld())
