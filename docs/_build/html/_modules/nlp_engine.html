@@ -1,0 +1,791 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nlp_engine &mdash; text-to-PJM 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            text-to-PJM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">text-to-PJM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nlp_engine</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nlp_engine</h1><div class="highlight"><pre>
+<span></span><span class="c1"># nlp_engine.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">spacy_stanza</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;stanza&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+
+<div class="viewcode-block" id="resource_path">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.resource_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resource_path</span><span class="p">(</span><span class="n">relative_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the absolute path to a resource file in development or PyInstaller build.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        relative_path (str): Relative path to the resource file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Path: Absolute path to the requested resource file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;_MEIPASS&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">_MEIPASS</span><span class="p">)</span> <span class="o">/</span> <span class="n">relative_path</span>
+    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">relative_path</span></div>
+
+
+<span class="n">STANZA_DIR</span> <span class="o">=</span> <span class="n">resource_path</span><span class="p">(</span><span class="s2">&quot;stanza_resources&quot;</span><span class="p">)</span>
+
+<span class="c1"># loading model only once at the start of the server</span>
+<span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy_stanza</span><span class="o">.</span><span class="n">load_pipeline</span><span class="p">(</span><span class="s2">&quot;pl&quot;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">STANZA_DIR</span><span class="p">),</span> <span class="n">download_method</span><span class="o">=</span><span class="s2">&quot;REUSE_RESOURCES&quot;</span><span class="p">)</span>
+
+
+<span class="n">EXCEPTIONS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;WARSZAWA&quot;</span><span class="p">,</span> <span class="s2">&quot;FACEBOOK&quot;</span><span class="p">,</span> <span class="s2">&quot;POLSKA&quot;</span><span class="p">,</span> <span class="s2">&quot;YOUTUBE&quot;</span><span class="p">}</span>
+
+<span class="n">MULTI_WORD_TO_SAFE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dzień dobry&quot;</span><span class="p">:</span> <span class="s2">&quot;DZIENDOBRY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;do widzenia&quot;</span><span class="p">:</span> <span class="s2">&quot;DOWIDZENIA&quot;</span>
+<span class="p">}</span>
+
+<span class="n">SAFE_TO_GLOSS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;DZIENDOBRY&quot;</span><span class="p">:</span> <span class="s2">&quot;DZIEŃ_DOBRY&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DOWIDZENIA&quot;</span><span class="p">:</span> <span class="s2">&quot;DO_WIDZENIA&quot;</span>
+<span class="p">}</span>
+
+<span class="n">FORCED_CLAUSE_ROOTS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DZIENDOBRY&quot;</span><span class="p">,</span> <span class="s2">&quot;DOWIDZENIA&quot;</span><span class="p">}</span>
+
+<span class="n">NEGATED_VERBS_MAP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;ROZUMIEĆ&quot;</span><span class="p">:</span> <span class="s2">&quot;NIE_ROZUMIEĆ&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">QUESTION_WORDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;czy&quot;</span><span class="p">,</span> <span class="s2">&quot;kto&quot;</span><span class="p">,</span> <span class="s2">&quot;co&quot;</span><span class="p">,</span> <span class="s2">&quot;komu&quot;</span><span class="p">,</span> <span class="s2">&quot;czemu&quot;</span><span class="p">,</span> <span class="s2">&quot;gdzie&quot;</span><span class="p">,</span> <span class="s2">&quot;dokąd&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;skąd&quot;</span><span class="p">,</span> <span class="s2">&quot;kiedy&quot;</span><span class="p">,</span> <span class="s2">&quot;jak&quot;</span><span class="p">,</span> <span class="s2">&quot;jaki&quot;</span><span class="p">,</span> <span class="s2">&quot;jaka&quot;</span><span class="p">,</span> <span class="s2">&quot;jakie&quot;</span><span class="p">,</span> <span class="s2">&quot;jakim&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dlaczego&quot;</span><span class="p">,</span> <span class="s2">&quot;ile&quot;</span><span class="p">,</span> <span class="s2">&quot;ilu&quot;</span><span class="p">,</span> <span class="s2">&quot;który&quot;</span><span class="p">,</span> <span class="s2">&quot;która&quot;</span><span class="p">,</span> <span class="s2">&quot;które&quot;</span>
+<span class="p">}</span>
+
+<span class="n">QUESTION_PATTERNS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s2">&quot;po&quot;</span><span class="p">,</span> <span class="s2">&quot;co&quot;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;jaki&quot;</span><span class="p">,</span> <span class="s2">&quot;sposób&quot;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;jaki&quot;</span><span class="p">,</span> <span class="s2">&quot;powód&quot;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;jaki&quot;</span><span class="p">,</span> <span class="s2">&quot;cel&quot;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;jaki&quot;</span><span class="p">,</span> <span class="s2">&quot;przyczyna&quot;</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="n">CLAUSE_DEPS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="s2">&quot;conj&quot;</span><span class="p">,</span> <span class="s2">&quot;advcl&quot;</span><span class="p">,</span> <span class="s2">&quot;ccomp&quot;</span><span class="p">,</span> <span class="s2">&quot;parataxis&quot;</span><span class="p">,</span> <span class="s2">&quot;acl:relcl&quot;</span><span class="p">}</span>
+
+<div class="viewcode-block" id="preprocess_text">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.preprocess_text">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">preprocess_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Encode exceptions and multi-word expressions to safe tokens before processing</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        text (str): Input Polish text.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Text with selected multi-word expressions replaced by safe tokens.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">for</span> <span class="n">phrase</span><span class="p">,</span> <span class="n">safe_token</span> <span class="ow">in</span> <span class="n">MULTI_WORD_TO_SAFE</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\b&#39;</span> <span class="o">+</span> <span class="n">phrase</span> <span class="o">+</span> <span class="sa">r</span><span class="s1">&#39;\b&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">safe_token</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span></div>
+
+
+<div class="viewcode-block" id="is_question">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.is_question">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_question</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines if a sentence is a question</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        sentence (Span): Sentence span produced by the NLP parser.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the sentence is classified as a question, otherwise False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># check if sentence ends with a question mark</span>
+    <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sentence</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">t</span><span class="o">.</span><span class="n">is_punct</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tokens</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># check if the first token is a question word</span>
+    <span class="n">first_token</span> <span class="o">=</span> <span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">first_token</span> <span class="ow">in</span> <span class="n">QUESTION_WORDS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="c1"># check for specific question patterns</span>
+    <span class="n">lemmas</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">QUESTION_PATTERNS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lemmas</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">pattern</span><span class="p">)]</span> <span class="o">==</span> <span class="n">pattern</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="is_negative">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.is_negative">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_negative</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines if a sentence is a negation</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        sentence (Span): Sentence span produced by the NLP parser.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the sentence contains negation, otherwise False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">sentence</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;nie&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># check for negative polarity in morphological features</span>
+        <span class="k">if</span> <span class="s2">&quot;Polarity=Neg&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">morph</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="classify_sentence">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.classify_sentence">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">classify_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines the sentence type</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        sentence (Span): Sentence span produced by the NLP parser.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Sentence type. Possible values are &quot;question&quot;, &quot;exclamation&quot;, &quot;negation&quot;, or &quot;statement&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">is_question</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;question&quot;</span>
+    <span class="k">elif</span> <span class="n">sentence</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;exclamation&quot;</span>
+    <span class="k">elif</span> <span class="n">is_negative</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;negation&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;statement&quot;</span></div>
+
+    
+<div class="viewcode-block" id="get_tense">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.get_tense">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_tense</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines the tense of a token</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        token (Token): Token produced by the NLP parser.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Tense value. Possible values are &quot;past&quot;, &quot;future&quot;, or &quot;present&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;Past&quot;</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">morph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Tense&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">return</span> <span class="s2">&quot;past&quot;</span>
+    <span class="k">elif</span> <span class="s2">&quot;Fut&quot;</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">morph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Tense&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">return</span> <span class="s2">&quot;future&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;present&quot;</span></div>
+
+
+<div class="viewcode-block" id="infer_subject_from_verb">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.infer_subject_from_verb">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">infer_subject_from_verb</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recover hidden Polish subject from verb morphology.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        token (Optional[Token]): Verb or auxiliary token carrying person and number information.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Optional[dict[str, str]]: Dictionary with inferred subject data, or None</span>
+<span class="sd">        if the subject cannot be inferred.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">person</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">morph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">)</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">morph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Number&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">person</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">person</span> <span class="o">=</span> <span class="n">person</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="n">number</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">number</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">person</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+        <span class="n">gloss</span> <span class="o">=</span> <span class="s2">&quot;JA&quot;</span> <span class="k">if</span> <span class="n">number</span> <span class="o">==</span> <span class="s2">&quot;Sing&quot;</span> <span class="k">else</span> <span class="s2">&quot;MY&quot;</span>
+
+    <span class="k">elif</span> <span class="n">person</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span>
+        <span class="n">gloss</span> <span class="o">=</span> <span class="s2">&quot;TY&quot;</span> <span class="k">if</span> <span class="n">number</span> <span class="o">==</span> <span class="s2">&quot;Sing&quot;</span> <span class="k">else</span> <span class="s2">&quot;WY&quot;</span>
+
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># got rid of 3rd person - useless and lead to bugs</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;sign&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gloss&quot;</span><span class="p">:</span> <span class="n">gloss</span>
+    <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="get_clause_subtree_tokens">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.get_clause_subtree_tokens">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_clause_subtree_tokens</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets all words that belong to the same clause as the given token.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        token (Token): Clause root token.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[Token]: Tokens from the clause subtree sorted by their position in the sentence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">subtree</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">i</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_finite_controller">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.get_finite_controller">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_finite_controller</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds the finite verb or auxiliary that carries grammatical person/number information for the clause.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        token (Token): Clause root token.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Optional[Token]: Finite verb or auxiliary token, or None if no suitable token is found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Look for verbs and auxiliaries in the subtree of the clause root</span>
+    <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">get_clause_subtree_tokens</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">tok</span><span class="o">.</span><span class="n">pos_</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;VERB&quot;</span><span class="p">,</span> <span class="s2">&quot;AUX&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tok</span><span class="o">.</span><span class="n">morph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">):</span>
+            <span class="n">candidates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># prefer auxiliary verbs because they usually</span>
+    <span class="c1"># carry the grammatical person/tense information</span>
+    <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tok</span><span class="o">.</span><span class="n">dep_</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;aux&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">tok</span>
+
+    <span class="k">return</span> <span class="n">candidates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="has_dative_experiencer">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.has_dative_experiencer">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">has_dative_experiencer</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Detect dative experiencers to avoid incorrect third-person subject inference.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        token (Token): Clause root token.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if a dative experiencer is found, otherwise False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">subtree</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tok</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ja&quot;</span><span class="p">,</span> <span class="s2">&quot;ty&quot;</span><span class="p">,</span> <span class="s2">&quot;my&quot;</span><span class="p">,</span> <span class="s2">&quot;wy&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;Dat&quot;</span> <span class="ow">in</span> <span class="n">tok</span><span class="o">.</span><span class="n">morph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Case&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="is_clause_root">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.is_clause_root">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_clause_root</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines if a token is a clause root</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        token (Token): Token to check.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the token should be treated as a clause root, otherwise False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">&quot;root&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="c1"># Force certain tokens to be treated as clause roots</span>
+    <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="n">FORCED_CLAUSE_ROOTS</span> <span class="ow">or</span> <span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="n">FORCED_CLAUSE_ROOTS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">dep_</span> <span class="ow">in</span> <span class="n">CLAUSE_DEPS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">&quot;conj&quot;</span> <span class="ow">and</span> <span class="n">token</span><span class="o">.</span><span class="n">pos_</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;NOUN&quot;</span><span class="p">,</span> <span class="s2">&quot;PROPN&quot;</span><span class="p">,</span> <span class="s2">&quot;ADJ&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">token</span><span class="o">.</span><span class="n">pos_</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;VERB&quot;</span><span class="p">,</span> <span class="s2">&quot;AUX&quot;</span><span class="p">,</span> <span class="s2">&quot;ADJ&quot;</span><span class="p">,</span> <span class="s2">&quot;NOUN&quot;</span><span class="p">,</span> <span class="s2">&quot;PROPN&quot;</span><span class="p">,</span> <span class="s2">&quot;NUM&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="split_into_clauses">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.split_into_clauses">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">split_into_clauses</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Split a sentence into clauses based on dependency parsing</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        sentence (Span): Sentence span produced by the NLP parser.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[Token]: List of tokens identified as clause roots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">token</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">sentence</span> <span class="k">if</span> <span class="n">is_clause_root</span><span class="p">(</span><span class="n">token</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="get_clause_tokens">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.get_clause_tokens">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_clause_tokens</span><span class="p">(</span><span class="n">root</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Collect tokens belonging only to the clause headed by the given root</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        root (Token): Root token of the clause.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[Token]: Tokens belonging to the clause, sorted by their original position.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">tokens</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">subtree</span><span class="p">:</span>
+        <span class="c1"># Ignore nested clause heads</span>
+        <span class="k">if</span> <span class="n">tok</span> <span class="o">!=</span> <span class="n">root</span> <span class="ow">and</span> <span class="n">is_clause_root</span><span class="p">(</span><span class="n">tok</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="n">skip</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">anc</span> <span class="ow">in</span> <span class="n">tok</span><span class="o">.</span><span class="n">ancestors</span><span class="p">:</span>
+            <span class="c1"># Stop when we reach the current clause root</span>
+            <span class="k">if</span> <span class="n">anc</span> <span class="o">==</span> <span class="n">root</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="c1"># Skip tokens that belong to nested clauses</span>
+            <span class="k">if</span> <span class="n">is_clause_root</span><span class="p">(</span><span class="n">anc</span><span class="p">):</span>
+                <span class="n">skip</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">skip</span><span class="p">:</span>
+            <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span>
+
+    <span class="c1"># Sort tokens by their original position in the sentence</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">i</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="collect_dependents">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.collect_dependents">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">collect_dependents</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">subjects</span><span class="p">,</span> <span class="n">objects</span><span class="p">,</span> <span class="n">adverbials</span><span class="p">,</span> <span class="n">predicate_modifiers</span><span class="p">,</span> <span class="n">question_words</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recursively collect subjects, objects, adverbials, and predicate modifiers for a given clause root</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        token (Token): Clause root or token whose children should be analyzed.</span>
+<span class="sd">        subjects (list[dict[str, Any]]): List where detected subject glosses are stored.</span>
+<span class="sd">        objects (list[dict[str, Any]]): List where detected object glosses are stored.</span>
+<span class="sd">        adverbials (list[dict[str, Any]]): List where detected adverbial glosses are stored.</span>
+<span class="sd">        predicate_modifiers (list[dict[str, Any]]): List where predicate modifier glosses are stored.</span>
+<span class="sd">        question_words (list[dict[str, Any]]): List where detected question word glosses are stored.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">is_punct</span> <span class="ow">or</span> <span class="n">child</span><span class="o">.</span><span class="n">pos_</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ADP&quot;</span><span class="p">,</span> <span class="s2">&quot;CCONJ&quot;</span><span class="p">,</span> <span class="s2">&quot;SCONJ&quot;</span><span class="p">,</span> <span class="s2">&quot;PART&quot;</span><span class="p">):</span>
+            <span class="k">continue</span>
+        
+        <span class="c1"># Fail-safe for nested clause heads</span>
+        <span class="k">if</span> <span class="n">is_clause_root</span><span class="p">(</span><span class="n">child</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Handle numbers as objects</span>
+        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">pos_</span> <span class="o">==</span> <span class="s2">&quot;NUM&quot;</span><span class="p">:</span>
+            <span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parse_token_for_json</span><span class="p">(</span><span class="n">child</span><span class="p">))</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">QUESTION_WORDS</span><span class="p">:</span>
+            <span class="n">question_words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parse_token_for_json</span><span class="p">(</span><span class="n">child</span><span class="p">))</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Subjects (who/what performs the action)</span>
+        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;nsubj&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">&quot;csubj&quot;</span><span class="p">:</span>
+            <span class="n">subjects</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_noun_phrase</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">question_words</span><span class="p">))</span>
+
+        <span class="c1"># Objects (whom/what)</span>
+        <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;obj&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">&quot;iobj&quot;</span> <span class="ow">or</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">&quot;obl:arg&quot;</span><span class="p">:</span>
+            <span class="n">objects</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_noun_phrase</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">question_words</span><span class="p">))</span>
+
+        <span class="c1"># Adverbials (where/when)</span>
+        <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;obl&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;advmod&quot;</span><span class="p">,</span> <span class="s2">&quot;vocative&quot;</span><span class="p">,</span> <span class="s2">&quot;discourse&quot;</span><span class="p">):</span>
+            <span class="n">adverbials</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_noun_phrase</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">question_words</span><span class="p">))</span>
+
+        <span class="c1"># Predicate modifiers and direct conjunctions/appositions</span>
+        <span class="c1"># ADDED: &quot;conj&quot;, &quot;appos&quot;, &quot;flat&quot; to catch words like &quot;wesoły&quot;, &quot;nowy&quot;, &quot;chorzy&quot;</span>
+        <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;amod&quot;</span><span class="p">,</span> <span class="s2">&quot;nmod&quot;</span><span class="p">,</span> <span class="s2">&quot;det&quot;</span><span class="p">,</span> <span class="s2">&quot;nummod&quot;</span><span class="p">,</span> <span class="s2">&quot;conj&quot;</span><span class="p">,</span> <span class="s2">&quot;appos&quot;</span><span class="p">,</span> <span class="s2">&quot;flat&quot;</span><span class="p">):</span>
+            <span class="n">predicate_modifiers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_noun_phrase</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">question_words</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">&quot;xcomp&quot;</span> <span class="ow">and</span> <span class="n">child</span><span class="o">.</span><span class="n">pos_</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;VERB&quot;</span><span class="p">,</span> <span class="s2">&quot;AUX&quot;</span><span class="p">):</span>
+            <span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parse_token_for_json</span><span class="p">(</span><span class="n">child</span><span class="p">))</span>
+            <span class="n">collect_dependents</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">subjects</span><span class="p">,</span> <span class="n">objects</span><span class="p">,</span> <span class="n">adverbials</span><span class="p">,</span> <span class="n">predicate_modifiers</span><span class="p">,</span> <span class="n">question_words</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="build_clause_pjm">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.build_clause_pjm">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_clause_pjm</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">clause_type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Build the PJM gloss sequence for a clause based on its root and dependents</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        token (Token): Root token of the clause.</span>
+<span class="sd">        clause_type (str): Type of the clause, for example &quot;statement&quot;, &quot;question&quot;,</span>
+<span class="sd">            &quot;negation&quot;, or &quot;exclamation&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[dict[str, Any]]: Ordered PJM gloss sequence for the clause.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">subjects</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">adverbials</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">predicate_modifiers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">question_words</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">collect_dependents</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">subjects</span><span class="p">,</span> <span class="n">objects</span><span class="p">,</span> <span class="n">adverbials</span><span class="p">,</span> <span class="n">predicate_modifiers</span><span class="p">,</span><span class="n">question_words</span><span class="p">)</span>
+
+    <span class="c1"># Infer hidden subjects (JA, TY, MY, WY, ON) from verb inflection if the clause has no explicit subject</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">subjects</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">has_dative_experiencer</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+            <span class="n">finite_controller</span> <span class="o">=</span> <span class="n">get_finite_controller</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+
+            <span class="n">inferred_subject</span> <span class="o">=</span> <span class="n">infer_subject_from_verb</span><span class="p">(</span><span class="n">finite_controller</span><span class="p">,)</span>
+
+            <span class="k">if</span> <span class="n">inferred_subject</span><span class="p">:</span>
+                <span class="n">subjects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inferred_subject</span><span class="p">)</span>
+
+    <span class="n">main_verb_data</span> <span class="o">=</span> <span class="n">parse_token_for_json</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+    <span class="n">tense</span> <span class="o">=</span> <span class="n">get_tense</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">dep_</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;aux&quot;</span><span class="p">):</span>
+            <span class="n">aux_tense</span> <span class="o">=</span> <span class="n">get_tense</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">aux_tense</span> <span class="o">!=</span> <span class="s2">&quot;present&quot;</span><span class="p">:</span>
+                <span class="n">tense</span> <span class="o">=</span> <span class="n">aux_tense</span>
+
+    <span class="k">if</span> <span class="n">tense</span> <span class="o">!=</span> <span class="s2">&quot;present&quot;</span><span class="p">:</span>
+        <span class="n">main_verb_data</span><span class="p">[</span><span class="s2">&quot;tense&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tense</span>
+
+    <span class="n">is_negated</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;nie&quot;</span> <span class="ow">or</span> <span class="s2">&quot;Neg&quot;</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">morph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Polarity&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="n">is_negated</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;nie&quot;</span> <span class="ow">or</span> <span class="s2">&quot;Neg&quot;</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">morph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Polarity&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="n">is_negated</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">break</span>
+
+    <span class="k">if</span> <span class="n">is_negated</span><span class="p">:</span>
+        <span class="n">main_verb_data</span><span class="p">[</span><span class="s2">&quot;is_negated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Handle negated exceptions for verbs</span>
+    <span class="n">verb_gloss</span> <span class="o">=</span> <span class="n">main_verb_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gloss&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">main_verb_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_negated&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">verb_gloss</span> <span class="ow">in</span> <span class="n">NEGATED_VERBS_MAP</span><span class="p">:</span>
+        <span class="n">main_verb_data</span><span class="p">[</span><span class="s2">&quot;gloss&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">NEGATED_VERBS_MAP</span><span class="p">[</span><span class="n">verb_gloss</span><span class="p">]</span>
+        <span class="n">main_verb_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;is_negated&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Clear question words if clause is not a question</span>
+    <span class="k">if</span> <span class="n">clause_type</span> <span class="o">!=</span> <span class="s2">&quot;question&quot;</span><span class="p">:</span>
+        <span class="n">question_words</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Ordering the glosses: Subject -&gt; Adverbial -&gt; Object -&gt; Verb</span>
+    <span class="n">verb_element</span> <span class="o">=</span> <span class="p">[</span><span class="n">main_verb_data</span><span class="p">]</span> <span class="o">+</span> <span class="n">predicate_modifiers</span>
+    <span class="n">clause_pjm</span> <span class="o">=</span> <span class="n">subjects</span> <span class="o">+</span> <span class="n">adverbials</span> <span class="o">+</span> <span class="n">objects</span> <span class="o">+</span> <span class="n">verb_element</span> <span class="o">+</span> <span class="n">question_words</span>
+
+    <span class="k">return</span> <span class="n">clause_pjm</span></div>
+
+
+<div class="viewcode-block" id="parse_token_for_json">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.parse_token_for_json">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_token_for_json</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines if the token should be a sign or spelled out, and checks for plurals</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        token (Token): Token produced by the NLP parser.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, Any]: JSON-compatible gloss item containing fields such as</span>
+<span class="sd">        &quot;type&quot;, &quot;gloss&quot;, &quot;letters&quot;, &quot;is_negated&quot;, or &quot;is_plural&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">pos_</span> <span class="o">==</span> <span class="s2">&quot;NUM&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;sign&quot;</span><span class="p">,</span> <span class="s2">&quot;gloss&quot;</span><span class="p">:</span> <span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">upper</span><span class="p">()}</span>
+
+    <span class="c1"># Decode exceptions</span>
+    <span class="n">text_upper</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">lemma_upper_raw</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">text_upper</span> <span class="ow">in</span> <span class="n">SAFE_TO_GLOSS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;sign&quot;</span><span class="p">,</span> <span class="s2">&quot;gloss&quot;</span><span class="p">:</span> <span class="n">SAFE_TO_GLOSS</span><span class="p">[</span><span class="n">text_upper</span><span class="p">]}</span>
+    <span class="k">if</span> <span class="n">lemma_upper_raw</span> <span class="ow">in</span> <span class="n">SAFE_TO_GLOSS</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;sign&quot;</span><span class="p">,</span> <span class="s2">&quot;gloss&quot;</span><span class="p">:</span> <span class="n">SAFE_TO_GLOSS</span><span class="p">[</span><span class="n">lemma_upper_raw</span><span class="p">]}</span>
+
+    <span class="n">lemma_upper</span><span class="p">,</span> <span class="n">lexical_negation</span> <span class="o">=</span> <span class="n">extract_negated_base_form</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+    <span class="n">token_data</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="n">lemma_upper</span> <span class="ow">in</span> <span class="n">EXCEPTIONS</span><span class="p">:</span>
+        <span class="n">token_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;sign&quot;</span><span class="p">,</span> <span class="s2">&quot;gloss&quot;</span><span class="p">:</span> <span class="n">lemma_upper</span><span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fingerspell_ents</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;persName&quot;</span><span class="p">,</span> <span class="s2">&quot;placeName&quot;</span><span class="p">,</span> <span class="s2">&quot;geogName&quot;</span><span class="p">,</span> <span class="s2">&quot;orgName&quot;</span><span class="p">]</span>
+        <span class="n">is_proper_noun</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">pos_</span> <span class="o">==</span> <span class="s2">&quot;PROPN&quot;</span> <span class="ow">or</span> <span class="n">token</span><span class="o">.</span><span class="n">ent_type_</span> <span class="ow">in</span> <span class="n">fingerspell_ents</span>
+
+        <span class="k">if</span> <span class="n">is_proper_noun</span><span class="p">:</span>
+            <span class="n">token_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;fingerspell&quot;</span><span class="p">,</span> <span class="s2">&quot;gloss&quot;</span><span class="p">:</span> <span class="n">lemma_upper</span><span class="p">,</span> <span class="s2">&quot;letters&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">lemma_upper</span><span class="p">)}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">token_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;sign&quot;</span><span class="p">,</span> <span class="s2">&quot;gloss&quot;</span><span class="p">:</span> <span class="n">lemma_upper</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">lexical_negation</span><span class="p">:</span>
+        <span class="n">token_data</span><span class="p">[</span><span class="s2">&quot;is_negated&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="s2">&quot;Plur&quot;</span> <span class="ow">in</span> <span class="n">token</span><span class="o">.</span><span class="n">morph</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Number&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="n">token_data</span><span class="p">[</span><span class="s2">&quot;is_plural&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">token_data</span></div>
+
+
+<div class="viewcode-block" id="get_noun_phrase">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.get_noun_phrase">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_noun_phrase</span><span class="p">(</span><span class="n">head_token</span><span class="p">,</span> <span class="n">question_words</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets the head word and all its modifiers</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        head_token (Token): Head token of the noun phrase.</span>
+<span class="sd">        question_words (Optional[list[dict[str, Any]]]): Optional list where detected</span>
+<span class="sd">            question words are stored.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[dict[str, Any]]: PJM gloss items representing the noun phrase.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">numbers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">after_head</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">head_token</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+        <span class="c1"># Skip punctuation and irrelevant parts of speech</span>
+        <span class="k">if</span> <span class="n">sub</span><span class="o">.</span><span class="n">is_punct</span> <span class="ow">or</span> <span class="n">sub</span><span class="o">.</span><span class="n">pos_</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;ADP&quot;</span><span class="p">,</span> <span class="s2">&quot;CCONJ&quot;</span><span class="p">,</span> <span class="s2">&quot;SCONJ&quot;</span><span class="p">,</span> <span class="s2">&quot;PART&quot;</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Fail-safe for nested clause heads</span>
+        <span class="k">if</span> <span class="n">is_clause_root</span><span class="p">(</span><span class="n">sub</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">question_words</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sub</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">QUESTION_WORDS</span><span class="p">:</span>
+            <span class="n">question_words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parse_token_for_json</span><span class="p">(</span><span class="n">sub</span><span class="p">))</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Handle numbers as part of noun phrases</span>
+        <span class="k">if</span> <span class="n">sub</span><span class="o">.</span><span class="n">pos_</span> <span class="o">==</span> <span class="s2">&quot;NUM&quot;</span><span class="p">:</span>
+            <span class="n">numbers</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_noun_phrase</span><span class="p">(</span><span class="n">sub</span><span class="p">))</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Only include modifiers that are relevant for noun phrases</span>
+        <span class="k">if</span> <span class="n">sub</span><span class="o">.</span><span class="n">dep_</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;flat&quot;</span><span class="p">,</span> <span class="s2">&quot;appos&quot;</span><span class="p">,</span> <span class="s2">&quot;nmod&quot;</span><span class="p">,</span> <span class="s2">&quot;amod&quot;</span><span class="p">,</span> <span class="s2">&quot;det&quot;</span><span class="p">,</span> <span class="s2">&quot;nummod&quot;</span><span class="p">,</span> <span class="s2">&quot;conj&quot;</span><span class="p">,</span> <span class="s2">&quot;advmod&quot;</span><span class="p">,</span> <span class="s2">&quot;obl&quot;</span><span class="p">):</span>
+            <span class="n">after_head</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_noun_phrase</span><span class="p">(</span><span class="n">sub</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">numbers</span> <span class="o">+</span> <span class="p">[</span><span class="n">parse_token_for_json</span><span class="p">(</span><span class="n">head_token</span><span class="p">)]</span> <span class="o">+</span> <span class="n">after_head</span></div>
+
+
+<div class="viewcode-block" id="extract_negated_base_form">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.extract_negated_base_form">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_negated_base_form</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Detect negated adjectives like &#39;niezadowolony&#39;, &#39;niemiły&#39;.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        token (Token): Token to analyze.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[str, bool]: A tuple containing the extracted base form in uppercase</span>
+<span class="sd">        and a boolean value indicating whether lexical negation was detected.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">pos_</span> <span class="o">!=</span> <span class="s2">&quot;ADJ&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">token</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="kc">False</span>
+
+    <span class="n">lemma</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="c1"># Check if the lemma itself starts with &quot;nie&quot; and is longer than 3 characters</span>
+    <span class="k">if</span> <span class="n">lemma</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;nie&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">lemma</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">lemma</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="kc">True</span>
+
+    <span class="c1"># Check if the actual text starts with &quot;nie&quot; (to catch cases where the lemma might not reflect the negation)</span>
+    <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;nie&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">text</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">token</span><span class="o">.</span><span class="n">lemma_</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="process_polish_text">
+<a class="viewcode-back" href="../nlp_engine.html#nlp_engine.process_polish_text">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_polish_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main function to process Polish text and return structured data for PJM translation</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        text (str): Polish text to process.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, Any]: Dictionary containing the processed text and a list of</span>
+<span class="sd">        clauses with their sentence types and PJM gloss sequences.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="n">preprocess_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">clauses</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">sent</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">sents</span><span class="p">:</span>
+        <span class="n">clause_roots</span> <span class="o">=</span> <span class="n">split_into_clauses</span><span class="p">(</span><span class="n">sent</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">root</span> <span class="ow">in</span> <span class="n">clause_roots</span><span class="p">:</span>
+            <span class="n">clause_text_tokens</span> <span class="o">=</span> <span class="n">get_clause_tokens</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+            <span class="n">clause_text</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">clause_text_tokens</span><span class="p">)</span>
+
+            <span class="n">clause_doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">clause_text</span><span class="p">)</span>
+            <span class="n">clause_sentence</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">clause_doc</span><span class="o">.</span><span class="n">sents</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">clause_type</span> <span class="o">=</span> <span class="n">classify_sentence</span><span class="p">(</span><span class="n">clause_sentence</span><span class="p">)</span>
+            
+            <span class="c1"># Override for relative and adverbial clauses</span>
+            <span class="k">if</span> <span class="n">root</span><span class="o">.</span><span class="n">dep_</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;acl:relcl&quot;</span><span class="p">,</span> <span class="s2">&quot;advcl&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">clause_text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">):</span>
+                <span class="n">clause_type</span> <span class="o">=</span> <span class="s2">&quot;negation&quot;</span> <span class="k">if</span> <span class="n">is_negative</span><span class="p">(</span><span class="n">clause_sentence</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;statement&quot;</span>
+
+            <span class="n">clause_root</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">clause_sentence</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">dep_</span> <span class="o">==</span> <span class="s2">&quot;root&quot;</span><span class="p">:</span>
+                    <span class="n">clause_root</span> <span class="o">=</span> <span class="n">token</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">clause_root</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">clause_pjm</span> <span class="o">=</span> <span class="n">build_clause_pjm</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">clause_type</span><span class="p">)</span>
+
+            <span class="n">clauses</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;sentence_type&quot;</span><span class="p">:</span> <span class="n">clause_type</span><span class="p">,</span>
+                <span class="s2">&quot;pjm_sequence&quot;</span><span class="p">:</span> <span class="n">clause_pjm</span>
+            <span class="p">})</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
+        <span class="s2">&quot;clauses&quot;</span><span class="p">:</span> <span class="n">clauses</span>
+    <span class="p">}</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, PJM_team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

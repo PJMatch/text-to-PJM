@@ -1,0 +1,7 @@
+FastAPI module
+==============
+
+.. automodule:: FastAPI
+   :members:
+   :show-inheritance:
+   :undoc-members:

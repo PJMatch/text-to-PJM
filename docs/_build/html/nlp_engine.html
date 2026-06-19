@@ -1,0 +1,464 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nlp_engine module &mdash; text-to-PJM 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            text-to-PJM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">nlp_engine module</a><ul>
+<li><a class="reference internal" href="#nlp_engine.build_clause_pjm"><code class="docutils literal notranslate"><span class="pre">build_clause_pjm()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.classify_sentence"><code class="docutils literal notranslate"><span class="pre">classify_sentence()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.collect_dependents"><code class="docutils literal notranslate"><span class="pre">collect_dependents()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.extract_negated_base_form"><code class="docutils literal notranslate"><span class="pre">extract_negated_base_form()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.get_clause_subtree_tokens"><code class="docutils literal notranslate"><span class="pre">get_clause_subtree_tokens()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.get_clause_tokens"><code class="docutils literal notranslate"><span class="pre">get_clause_tokens()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.get_finite_controller"><code class="docutils literal notranslate"><span class="pre">get_finite_controller()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.get_noun_phrase"><code class="docutils literal notranslate"><span class="pre">get_noun_phrase()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.get_tense"><code class="docutils literal notranslate"><span class="pre">get_tense()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.has_dative_experiencer"><code class="docutils literal notranslate"><span class="pre">has_dative_experiencer()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.infer_subject_from_verb"><code class="docutils literal notranslate"><span class="pre">infer_subject_from_verb()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.is_clause_root"><code class="docutils literal notranslate"><span class="pre">is_clause_root()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.is_negative"><code class="docutils literal notranslate"><span class="pre">is_negative()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.is_question"><code class="docutils literal notranslate"><span class="pre">is_question()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.parse_token_for_json"><code class="docutils literal notranslate"><span class="pre">parse_token_for_json()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.preprocess_text"><code class="docutils literal notranslate"><span class="pre">preprocess_text()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.process_polish_text"><code class="docutils literal notranslate"><span class="pre">process_polish_text()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.resource_path"><code class="docutils literal notranslate"><span class="pre">resource_path()</span></code></a></li>
+<li><a class="reference internal" href="#nlp_engine.split_into_clauses"><code class="docutils literal notranslate"><span class="pre">split_into_clauses()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">text-to-PJM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">nlp_engine module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/nlp_engine.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nlp_engine">
+<span id="nlp-engine-module"></span><h1>nlp_engine module<a class="headerlink" href="#module-nlp_engine" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.build_clause_pjm">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">build_clause_pjm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clause_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#build_clause_pjm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.build_clause_pjm" title="Link to this definition"></a></dt>
+<dd><p>Build the PJM gloss sequence for a clause based on its root and dependents</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> (<em>Token</em>) – Root token of the clause.</p></li>
+<li><p><strong>clause_type</strong> (<em>str</em>) – Type of the clause, for example “statement”, “question”,
+“negation”, or “exclamation”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Ordered PJM gloss sequence for the clause.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict[str, Any]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.classify_sentence">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">classify_sentence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sentence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#classify_sentence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.classify_sentence" title="Link to this definition"></a></dt>
+<dd><p>Determines the sentence type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sentence</strong> (<em>Span</em>) – Sentence span produced by the NLP parser.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sentence type. Possible values are “question”, “exclamation”, “negation”, or “statement”.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.collect_dependents">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">collect_dependents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subjects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adverbials</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predicate_modifiers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">question_words</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#collect_dependents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.collect_dependents" title="Link to this definition"></a></dt>
+<dd><p>Recursively collect subjects, objects, adverbials, and predicate modifiers for a given clause root</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> (<em>Token</em>) – Clause root or token whose children should be analyzed.</p></li>
+<li><p><strong>subjects</strong> (<em>list</em><em>[</em><em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – List where detected subject glosses are stored.</p></li>
+<li><p><strong>objects</strong> (<em>list</em><em>[</em><em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – List where detected object glosses are stored.</p></li>
+<li><p><strong>adverbials</strong> (<em>list</em><em>[</em><em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – List where detected adverbial glosses are stored.</p></li>
+<li><p><strong>predicate_modifiers</strong> (<em>list</em><em>[</em><em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – List where predicate modifier glosses are stored.</p></li>
+<li><p><strong>question_words</strong> (<em>list</em><em>[</em><em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – List where detected question word glosses are stored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.extract_negated_base_form">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">extract_negated_base_form</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#extract_negated_base_form"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.extract_negated_base_form" title="Link to this definition"></a></dt>
+<dd><p>Detect negated adjectives like ‘niezadowolony’, ‘niemiły’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>Token</em>) – Token to analyze.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing the extracted base form in uppercase
+and a boolean value indicating whether lexical negation was detected.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[str, bool]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.get_clause_subtree_tokens">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">get_clause_subtree_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#get_clause_subtree_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.get_clause_subtree_tokens" title="Link to this definition"></a></dt>
+<dd><p>Gets all words that belong to the same clause as the given token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>Token</em>) – Clause root token.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tokens from the clause subtree sorted by their position in the sentence.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Token]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.get_clause_tokens">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">get_clause_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#get_clause_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.get_clause_tokens" title="Link to this definition"></a></dt>
+<dd><p>Collect tokens belonging only to the clause headed by the given root</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>root</strong> (<em>Token</em>) – Root token of the clause.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tokens belonging to the clause, sorted by their original position.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Token]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.get_finite_controller">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">get_finite_controller</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#get_finite_controller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.get_finite_controller" title="Link to this definition"></a></dt>
+<dd><p>Finds the finite verb or auxiliary that carries grammatical person/number information for the clause.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>Token</em>) – Clause root token.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Finite verb or auxiliary token, or None if no suitable token is found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Token]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.get_noun_phrase">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">get_noun_phrase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">head_token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">question_words</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#get_noun_phrase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.get_noun_phrase" title="Link to this definition"></a></dt>
+<dd><p>Gets the head word and all its modifiers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>head_token</strong> (<em>Token</em>) – Head token of the noun phrase.</p></li>
+<li><p><strong>question_words</strong> (<em>Optional</em><em>[</em><em>list</em><em>[</em><em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>]</em>) – Optional list where detected
+question words are stored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>PJM gloss items representing the noun phrase.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict[str, Any]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.get_tense">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">get_tense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#get_tense"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.get_tense" title="Link to this definition"></a></dt>
+<dd><p>Determines the tense of a token</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>Token</em>) – Token produced by the NLP parser.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tense value. Possible values are “past”, “future”, or “present”.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.has_dative_experiencer">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">has_dative_experiencer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#has_dative_experiencer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.has_dative_experiencer" title="Link to this definition"></a></dt>
+<dd><p>Detect dative experiencers to avoid incorrect third-person subject inference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>Token</em>) – Clause root token.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if a dative experiencer is found, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.infer_subject_from_verb">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">infer_subject_from_verb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#infer_subject_from_verb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.infer_subject_from_verb" title="Link to this definition"></a></dt>
+<dd><p>Recover hidden Polish subject from verb morphology.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>Optional</em><em>[</em><em>Token</em><em>]</em>) – Verb or auxiliary token carrying person and number information.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary with inferred subject data, or None
+if the subject cannot be inferred.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[dict[str, str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.is_clause_root">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">is_clause_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#is_clause_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.is_clause_root" title="Link to this definition"></a></dt>
+<dd><p>Determines if a token is a clause root</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>Token</em>) – Token to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the token should be treated as a clause root, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.is_negative">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">is_negative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sentence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#is_negative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.is_negative" title="Link to this definition"></a></dt>
+<dd><p>Determines if a sentence is a negation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sentence</strong> (<em>Span</em>) – Sentence span produced by the NLP parser.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the sentence contains negation, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.is_question">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">is_question</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sentence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#is_question"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.is_question" title="Link to this definition"></a></dt>
+<dd><p>Determines if a sentence is a question</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sentence</strong> (<em>Span</em>) – Sentence span produced by the NLP parser.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the sentence is classified as a question, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.parse_token_for_json">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">parse_token_for_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#parse_token_for_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.parse_token_for_json" title="Link to this definition"></a></dt>
+<dd><p>Determines if the token should be a sign or spelled out, and checks for plurals</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>Token</em>) – Token produced by the NLP parser.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>JSON-compatible gloss item containing fields such as
+“type”, “gloss”, “letters”, “is_negated”, or “is_plural”.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.preprocess_text">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">preprocess_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/nlp_engine.html#preprocess_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.preprocess_text" title="Link to this definition"></a></dt>
+<dd><p>Encode exceptions and multi-word expressions to safe tokens before processing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Input Polish text.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Text with selected multi-word expressions replaced by safe tokens.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.process_polish_text">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">process_polish_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/nlp_engine.html#process_polish_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.process_polish_text" title="Link to this definition"></a></dt>
+<dd><p>Main function to process Polish text and return structured data for PJM translation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Polish text to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary containing the processed text and a list of
+clauses with their sentence types and PJM gloss sequences.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.resource_path">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">resource_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relative_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="_modules/nlp_engine.html#resource_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.resource_path" title="Link to this definition"></a></dt>
+<dd><p>Returns the absolute path to a resource file in development or PyInstaller build.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>relative_path</strong> (<em>str</em>) – Relative path to the resource file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Absolute path to the requested resource file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nlp_engine.split_into_clauses">
+<span class="sig-prename descclassname"><span class="pre">nlp_engine.</span></span><span class="sig-name descname"><span class="pre">split_into_clauses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sentence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nlp_engine.html#split_into_clauses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nlp_engine.split_into_clauses" title="Link to this definition"></a></dt>
+<dd><p>Split a sentence into clauses based on dependency parsing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sentence</strong> (<em>Span</em>) – Sentence span produced by the NLP parser.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of tokens identified as clause roots.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Token]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, PJM_team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

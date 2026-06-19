@@ -1,0 +1,7 @@
+generate\_animationindex module
+===============================
+
+.. automodule:: generate_animationindex
+   :members:
+   :show-inheritance:
+   :undoc-members:

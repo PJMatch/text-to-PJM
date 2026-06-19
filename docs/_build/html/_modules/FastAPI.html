@@ -1,0 +1,389 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FastAPI &mdash; text-to-PJM 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            text-to-PJM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">text-to-PJM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">FastAPI</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for FastAPI</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span><span class="p">,</span> <span class="n">HTTPException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">unicodedata</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="c1"># importing the NLP engine function</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nlp_engine</span><span class="w"> </span><span class="kn">import</span> <span class="n">process_polish_text</span>
+
+<div class="viewcode-block" id="resource_path">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.resource_path">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resource_path</span><span class="p">(</span><span class="n">relative_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the absolute path to a resource file in development or PyInstaller build.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        relative_path (str): Relative path to the resource file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Path: Absolute path to the requested resource file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;_MEIPASS&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">_MEIPASS</span><span class="p">)</span> <span class="o">/</span> <span class="n">relative_path</span>
+    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">relative_path</span></div>
+
+
+<span class="n">ANIMATIONS_INDEX</span> <span class="o">=</span> <span class="n">resource_path</span><span class="p">(</span><span class="s2">&quot;available_animations.json&quot;</span><span class="p">)</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;PJM Translator API&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="load_available_animations">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.load_available_animations">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_available_animations</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads available animation names from a JSON index file.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        set[str]: Set of available animation names converted to uppercase.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ANIMATIONS_INDEX</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="n">ANIMATIONS_INDEX</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)}</span></div>
+
+
+<span class="n">AVAILABLE_ANIMATIONS</span> <span class="o">=</span> <span class="n">load_available_animations</span><span class="p">()</span>
+
+<div class="viewcode-block" id="GlossItem">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.GlossItem">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GlossItem</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">gloss</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">letters</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">tense</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">is_negated</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">is_plural</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Clause">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.Clause">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Clause</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">sentence_type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">pjm_sequence</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">GlossItem</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="GlossRequest">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.GlossRequest">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GlossRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">text</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">clauses</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Clause</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span></div>
+
+
+<span class="c1"># Function which maps gloss items to animation items</span>
+<div class="viewcode-block" id="AnimationItem">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.AnimationItem">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnimationItem</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">gloss</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">animation</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">sentence_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">tense</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">is_negated</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">is_plural</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="AnimationResponse">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.AnimationResponse">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnimationResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">animations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AnimationItem</span><span class="p">]</span></div>
+
+
+<span class="c1"># Input text from user</span>
+<div class="viewcode-block" id="TextRequest">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.TextRequest">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TextRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+<div class="viewcode-block" id="remove_polish_chars">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.remove_polish_chars">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_polish_chars</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Removes Polish diacritical marks from text to match animation file names.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        text (str): Text that may contain Polish diacritical characters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Text without Polish diacritical marks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s1">&#39;NFKD&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="c1"># Remove diacritical marks (accents) to get base characters (normalize returns the base character and its accent)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">text</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">combining</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+    <span class="c1"># &#39;Ł&#39; is a separate Unicode character (not a base + accent), so normalize manually</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Ł&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span></div>
+
+
+<span class="n">PJM_DIGRAPHS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;CH&quot;</span><span class="p">,</span> <span class="s2">&quot;CZ&quot;</span><span class="p">,</span> <span class="s2">&quot;RZ&quot;</span><span class="p">,</span> <span class="s2">&quot;SZ&quot;</span><span class="p">,</span> <span class="s2">&quot;DZ&quot;</span><span class="p">}</span>
+
+<span class="n">PJM_DIACRITICS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Ą&quot;</span><span class="p">:</span> <span class="s2">&quot;AA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ć&quot;</span><span class="p">:</span> <span class="s2">&quot;CC&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ę&quot;</span><span class="p">:</span> <span class="s2">&quot;EE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ł&quot;</span><span class="p">:</span> <span class="s2">&quot;LL&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ń&quot;</span><span class="p">:</span> <span class="s2">&quot;NN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ó&quot;</span><span class="p">:</span> <span class="s2">&quot;OO&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ś&quot;</span><span class="p">:</span> <span class="s2">&quot;SS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ż&quot;</span><span class="p">:</span> <span class="s2">&quot;ZZ&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Ź&quot;</span><span class="p">:</span> <span class="s2">&quot;ZZZ&quot;</span>
+<span class="p">}</span>
+
+<div class="viewcode-block" id="get_fingerspell_tokens">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.get_fingerspell_tokens">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_fingerspell_tokens</span><span class="p">(</span><span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Splits a word into PJM fingerspelling tokens (handles digraphs and diacritics).</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        word (str): Word to split into fingerspelling tokens.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List[str]: List of PJM fingerspelling tokens.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">word</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+        <span class="c1"># Check for 2-letter digraphs first</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="ow">and</span> <span class="n">word</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="ow">in</span> <span class="n">PJM_DIGRAPHS</span><span class="p">:</span>
+            <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">char</span> <span class="o">=</span> <span class="n">word</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="c1"># Convert diacritics (e.g., &#39;Ż&#39; -&gt; &#39;ZZ&#39;), or keep the char if not in dict</span>
+            <span class="n">tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PJM_DIACRITICS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="n">char</span><span class="p">))</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">tokens</span></div>
+
+
+<div class="viewcode-block" id="split_pjm_numbers">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.split_pjm_numbers">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">split_pjm_numbers</span><span class="p">(</span><span class="n">gloss</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Splits numbers 21-59 into tens and units (e.g., &#39;34&#39; -&gt; [&#39;30&#39;, &#39;4&#39;]).</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        gloss (str): Gloss value that may represent a number.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List[str]: List containing the original gloss or split number parts.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">gloss</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">gloss</span><span class="p">)</span>
+        <span class="c1"># Check if the number is between 21 and 59, and is not a round ten (30, 40, 50)</span>
+        <span class="k">if</span> <span class="mi">20</span> <span class="o">&lt;</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="mi">60</span> <span class="ow">and</span> <span class="n">val</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">((</span><span class="n">val</span> <span class="o">//</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span> <span class="o">%</span> <span class="mi">10</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">gloss</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="map_gloss_to_animation">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.map_gloss_to_animation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">map_gloss_to_animation</span><span class="p">(</span><span class="n">gloss_item</span><span class="p">:</span> <span class="n">GlossItem</span><span class="p">,</span> <span class="n">sentence_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnimationItem</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Maps a gloss item to an animation name by uppercasing it, removing Polish characters, and keeping its metadata.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        gloss_item (GlossItem): Gloss item containing the gloss text and metadata.</span>
+<span class="sd">        sentence_type (Optional[str]): Type of the sentence or clause, for example &quot;statement&quot; or &quot;question&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        AnimationItem: Animation item prepared for the frontend or UE animation system.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gloss</span> <span class="o">=</span> <span class="n">gloss_item</span><span class="o">.</span><span class="n">gloss</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="n">animation_name</span> <span class="o">=</span> <span class="n">remove_polish_chars</span><span class="p">(</span><span class="n">gloss</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">AnimationItem</span><span class="p">(</span>
+        <span class="n">gloss</span><span class="o">=</span><span class="n">gloss</span><span class="p">,</span>
+        <span class="n">animation</span><span class="o">=</span><span class="n">animation_name</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">gloss_item</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+        <span class="n">sentence_type</span><span class="o">=</span><span class="n">sentence_type</span><span class="p">,</span>
+        <span class="n">tense</span><span class="o">=</span><span class="n">gloss_item</span><span class="o">.</span><span class="n">tense</span><span class="p">,</span>
+        <span class="n">is_negated</span><span class="o">=</span><span class="n">gloss_item</span><span class="o">.</span><span class="n">is_negated</span><span class="p">,</span>
+        <span class="n">is_plural</span><span class="o">=</span><span class="n">gloss_item</span><span class="o">.</span><span class="n">is_plural</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="root">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.root">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">root</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if the PJM Translator API is running.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, str]: Health-check response with a confirmation message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;PJM Translator API works&quot;</span><span class="p">}</span></div>
+
+
+<span class="c1"># Main endpoint for translating text to animations</span>
+<div class="viewcode-block" id="translate_text_to_animations">
+<a class="viewcode-back" href="../FastAPI.html#FastAPI.translate_text_to_animations">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/translate&quot;</span><span class="p">,</span> <span class="n">response_model</span><span class="o">=</span><span class="n">List</span><span class="p">[</span><span class="n">AnimationItem</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">translate_text_to_animations</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">TextRequest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Translates Polish text into PJM animation items, including number splitting and fingerspelling fallback.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        request (TextRequest): Request body containing the Polish text to translate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List[AnimationItem]: List of animation items generated from the input text.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Polish text to structured gloss data</span>
+        <span class="n">raw_gloss_data</span> <span class="o">=</span> <span class="n">process_polish_text</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">GlossRequest</span><span class="p">(</span><span class="o">**</span><span class="n">raw_gloss_data</span><span class="p">)</span>
+
+        <span class="c1"># Mapping gloss items to animations</span>
+        <span class="n">animations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AnimationItem</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">clause</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">clauses</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">gloss_item</span> <span class="ow">in</span> <span class="n">clause</span><span class="o">.</span><span class="n">pjm_sequence</span><span class="p">:</span>
+                
+                <span class="c1"># Special handling for fingerspelling</span>
+                <span class="k">if</span> <span class="n">gloss_item</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;fingerspell&quot;</span><span class="p">:</span>
+                    <span class="n">tokens</span> <span class="o">=</span> <span class="n">get_fingerspell_tokens</span><span class="p">(</span><span class="n">gloss_item</span><span class="o">.</span><span class="n">gloss</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+                        <span class="n">animations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AnimationItem</span><span class="p">(</span>
+                            <span class="n">gloss</span><span class="o">=</span><span class="n">token</span><span class="p">,</span>
+                            <span class="n">animation</span><span class="o">=</span><span class="n">remove_polish_chars</span><span class="p">(</span><span class="n">token</span><span class="p">),</span>
+                            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;fingerspell&quot;</span><span class="p">,</span>
+                            <span class="n">sentence_type</span><span class="o">=</span><span class="n">clause</span><span class="o">.</span><span class="n">sentence_type</span>
+                        <span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">animation_item</span> <span class="o">=</span> <span class="n">map_gloss_to_animation</span><span class="p">(</span><span class="n">gloss_item</span><span class="p">,</span> <span class="n">clause</span><span class="o">.</span><span class="n">sentence_type</span><span class="p">)</span>
+                    
+                    <span class="n">sub_glosses</span> <span class="o">=</span> <span class="n">split_pjm_numbers</span><span class="p">(</span><span class="n">gloss_item</span><span class="o">.</span><span class="n">gloss</span><span class="p">)</span>
+                    
+                    <span class="k">for</span> <span class="n">sg</span> <span class="ow">in</span> <span class="n">sub_glosses</span><span class="p">:</span>
+                        <span class="c1"># Create a temporary item for the split gloss</span>
+                        <span class="n">temp_gloss_item</span> <span class="o">=</span> <span class="n">GlossItem</span><span class="p">(</span>
+                            <span class="nb">type</span><span class="o">=</span><span class="n">gloss_item</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+                            <span class="n">gloss</span><span class="o">=</span><span class="n">sg</span><span class="p">,</span>
+                            <span class="n">tense</span><span class="o">=</span><span class="n">gloss_item</span><span class="o">.</span><span class="n">tense</span><span class="p">,</span>
+                            <span class="n">is_negated</span><span class="o">=</span><span class="n">gloss_item</span><span class="o">.</span><span class="n">is_negated</span><span class="p">,</span>
+                            <span class="n">is_plural</span><span class="o">=</span><span class="n">gloss_item</span><span class="o">.</span><span class="n">is_plural</span>
+                        <span class="p">)</span>
+                        
+                        <span class="n">animation_item</span> <span class="o">=</span> <span class="n">map_gloss_to_animation</span><span class="p">(</span><span class="n">temp_gloss_item</span><span class="p">,</span> <span class="n">clause</span><span class="o">.</span><span class="n">sentence_type</span><span class="p">)</span>
+                        
+                        <span class="c1"># If the animation is not available, fallback to fingerspelling each letter of the gloss</span>
+                        <span class="k">if</span> <span class="n">animation_item</span><span class="o">.</span><span class="n">animation</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">AVAILABLE_ANIMATIONS</span><span class="p">:</span>
+                            <span class="n">tokens</span> <span class="o">=</span> <span class="n">get_fingerspell_tokens</span><span class="p">(</span><span class="n">temp_gloss_item</span><span class="o">.</span><span class="n">gloss</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+                                <span class="n">animations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">AnimationItem</span><span class="p">(</span>
+                                    <span class="n">gloss</span><span class="o">=</span><span class="n">token</span><span class="p">,</span>
+                                    <span class="n">animation</span><span class="o">=</span><span class="n">remove_polish_chars</span><span class="p">(</span><span class="n">token</span><span class="p">),</span>
+                                    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;fingerspell&quot;</span><span class="p">,</span>
+                                    <span class="n">sentence_type</span><span class="o">=</span><span class="n">clause</span><span class="o">.</span><span class="n">sentence_type</span>
+                                <span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">animations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">animation_item</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">animations</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">HTTPException</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">detail</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Błąd tłumaczenia: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, PJM_team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

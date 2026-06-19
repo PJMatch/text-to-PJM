@@ -1,0 +1,27 @@
+.. text-to-PJM documentation master file, created by
+   sphinx-quickstart on Fri Jun 19 22:59:06 2026.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+text-to-PJM documentation
+=========================
+
+Welcome to the text-to-PJM project documentation.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Modules:
+
+   FastAPI
+   nlp_engine
+   generate_animationindex
+   run_backend
+
+`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
+documentation for details.
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+

@@ -1,0 +1,457 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FastAPI module &mdash; text-to-PJM 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            text-to-PJM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">FastAPI module</a><ul>
+<li><a class="reference internal" href="#FastAPI.AnimationItem"><code class="docutils literal notranslate"><span class="pre">AnimationItem</span></code></a><ul>
+<li><a class="reference internal" href="#FastAPI.AnimationItem.animation"><code class="docutils literal notranslate"><span class="pre">AnimationItem.animation</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.AnimationItem.gloss"><code class="docutils literal notranslate"><span class="pre">AnimationItem.gloss</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.AnimationItem.is_negated"><code class="docutils literal notranslate"><span class="pre">AnimationItem.is_negated</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.AnimationItem.is_plural"><code class="docutils literal notranslate"><span class="pre">AnimationItem.is_plural</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.AnimationItem.model_config"><code class="docutils literal notranslate"><span class="pre">AnimationItem.model_config</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.AnimationItem.sentence_type"><code class="docutils literal notranslate"><span class="pre">AnimationItem.sentence_type</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.AnimationItem.tense"><code class="docutils literal notranslate"><span class="pre">AnimationItem.tense</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.AnimationItem.type"><code class="docutils literal notranslate"><span class="pre">AnimationItem.type</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#FastAPI.AnimationResponse"><code class="docutils literal notranslate"><span class="pre">AnimationResponse</span></code></a><ul>
+<li><a class="reference internal" href="#FastAPI.AnimationResponse.animations"><code class="docutils literal notranslate"><span class="pre">AnimationResponse.animations</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.AnimationResponse.model_config"><code class="docutils literal notranslate"><span class="pre">AnimationResponse.model_config</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#FastAPI.Clause"><code class="docutils literal notranslate"><span class="pre">Clause</span></code></a><ul>
+<li><a class="reference internal" href="#FastAPI.Clause.model_config"><code class="docutils literal notranslate"><span class="pre">Clause.model_config</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.Clause.pjm_sequence"><code class="docutils literal notranslate"><span class="pre">Clause.pjm_sequence</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.Clause.sentence_type"><code class="docutils literal notranslate"><span class="pre">Clause.sentence_type</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#FastAPI.GlossItem"><code class="docutils literal notranslate"><span class="pre">GlossItem</span></code></a><ul>
+<li><a class="reference internal" href="#FastAPI.GlossItem.gloss"><code class="docutils literal notranslate"><span class="pre">GlossItem.gloss</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.GlossItem.is_negated"><code class="docutils literal notranslate"><span class="pre">GlossItem.is_negated</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.GlossItem.is_plural"><code class="docutils literal notranslate"><span class="pre">GlossItem.is_plural</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.GlossItem.letters"><code class="docutils literal notranslate"><span class="pre">GlossItem.letters</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.GlossItem.model_config"><code class="docutils literal notranslate"><span class="pre">GlossItem.model_config</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.GlossItem.tense"><code class="docutils literal notranslate"><span class="pre">GlossItem.tense</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.GlossItem.type"><code class="docutils literal notranslate"><span class="pre">GlossItem.type</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#FastAPI.GlossRequest"><code class="docutils literal notranslate"><span class="pre">GlossRequest</span></code></a><ul>
+<li><a class="reference internal" href="#FastAPI.GlossRequest.clauses"><code class="docutils literal notranslate"><span class="pre">GlossRequest.clauses</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.GlossRequest.model_config"><code class="docutils literal notranslate"><span class="pre">GlossRequest.model_config</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.GlossRequest.text"><code class="docutils literal notranslate"><span class="pre">GlossRequest.text</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#FastAPI.TextRequest"><code class="docutils literal notranslate"><span class="pre">TextRequest</span></code></a><ul>
+<li><a class="reference internal" href="#FastAPI.TextRequest.model_config"><code class="docutils literal notranslate"><span class="pre">TextRequest.model_config</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.TextRequest.text"><code class="docutils literal notranslate"><span class="pre">TextRequest.text</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#FastAPI.get_fingerspell_tokens"><code class="docutils literal notranslate"><span class="pre">get_fingerspell_tokens()</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.load_available_animations"><code class="docutils literal notranslate"><span class="pre">load_available_animations()</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.map_gloss_to_animation"><code class="docutils literal notranslate"><span class="pre">map_gloss_to_animation()</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.remove_polish_chars"><code class="docutils literal notranslate"><span class="pre">remove_polish_chars()</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.resource_path"><code class="docutils literal notranslate"><span class="pre">resource_path()</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.root"><code class="docutils literal notranslate"><span class="pre">root()</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.split_pjm_numbers"><code class="docutils literal notranslate"><span class="pre">split_pjm_numbers()</span></code></a></li>
+<li><a class="reference internal" href="#FastAPI.translate_text_to_animations"><code class="docutils literal notranslate"><span class="pre">translate_text_to_animations()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">text-to-PJM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">FastAPI module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/FastAPI.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-FastAPI">
+<span id="fastapi-module"></span><h1>FastAPI module<a class="headerlink" href="#module-FastAPI" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="FastAPI.AnimationItem">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">AnimationItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">gloss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">animation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentence_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tense</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_negated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_plural</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FastAPI.html#AnimationItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.AnimationItem" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.AnimationItem.animation">
+<span class="sig-name descname"><span class="pre">animation</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#FastAPI.AnimationItem.animation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.AnimationItem.gloss">
+<span class="sig-name descname"><span class="pre">gloss</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#FastAPI.AnimationItem.gloss" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.AnimationItem.is_negated">
+<span class="sig-name descname"><span class="pre">is_negated</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#FastAPI.AnimationItem.is_negated" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.AnimationItem.is_plural">
+<span class="sig-name descname"><span class="pre">is_plural</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#FastAPI.AnimationItem.is_plural" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.AnimationItem.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#FastAPI.AnimationItem.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.AnimationItem.sentence_type">
+<span class="sig-name descname"><span class="pre">sentence_type</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#FastAPI.AnimationItem.sentence_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.AnimationItem.tense">
+<span class="sig-name descname"><span class="pre">tense</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#FastAPI.AnimationItem.tense" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.AnimationItem.type">
+<span class="sig-name descname"><span class="pre">type</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#FastAPI.AnimationItem.type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="FastAPI.AnimationResponse">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">AnimationResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">animations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#FastAPI.AnimationItem" title="FastAPI.AnimationItem"><span class="pre">AnimationItem</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FastAPI.html#AnimationResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.AnimationResponse" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.AnimationResponse.animations">
+<span class="sig-name descname"><span class="pre">animations</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#FastAPI.AnimationItem" title="FastAPI.AnimationItem"><span class="pre">AnimationItem</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#FastAPI.AnimationResponse.animations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.AnimationResponse.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#FastAPI.AnimationResponse.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="FastAPI.Clause">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">Clause</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentence_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pjm_sequence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#FastAPI.GlossItem" title="FastAPI.GlossItem"><span class="pre">GlossItem</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FastAPI.html#Clause"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.Clause" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.Clause.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#FastAPI.Clause.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.Clause.pjm_sequence">
+<span class="sig-name descname"><span class="pre">pjm_sequence</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#FastAPI.GlossItem" title="FastAPI.GlossItem"><span class="pre">GlossItem</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#FastAPI.Clause.pjm_sequence" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.Clause.sentence_type">
+<span class="sig-name descname"><span class="pre">sentence_type</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#FastAPI.Clause.sentence_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="FastAPI.GlossItem">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">GlossItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gloss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">letters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tense</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_negated</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_plural</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FastAPI.html#GlossItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.GlossItem" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.GlossItem.gloss">
+<span class="sig-name descname"><span class="pre">gloss</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#FastAPI.GlossItem.gloss" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.GlossItem.is_negated">
+<span class="sig-name descname"><span class="pre">is_negated</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#FastAPI.GlossItem.is_negated" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.GlossItem.is_plural">
+<span class="sig-name descname"><span class="pre">is_plural</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#FastAPI.GlossItem.is_plural" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.GlossItem.letters">
+<span class="sig-name descname"><span class="pre">letters</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#FastAPI.GlossItem.letters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.GlossItem.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#FastAPI.GlossItem.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.GlossItem.tense">
+<span class="sig-name descname"><span class="pre">tense</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#FastAPI.GlossItem.tense" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.GlossItem.type">
+<span class="sig-name descname"><span class="pre">type</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#FastAPI.GlossItem.type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="FastAPI.GlossRequest">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">GlossRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clauses</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#FastAPI.Clause" title="FastAPI.Clause"><span class="pre">Clause</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FastAPI.html#GlossRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.GlossRequest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.GlossRequest.clauses">
+<span class="sig-name descname"><span class="pre">clauses</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#FastAPI.Clause" title="FastAPI.Clause"><span class="pre">Clause</span></a><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#FastAPI.GlossRequest.clauses" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.GlossRequest.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#FastAPI.GlossRequest.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.GlossRequest.text">
+<span class="sig-name descname"><span class="pre">text</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#FastAPI.GlossRequest.text" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="FastAPI.TextRequest">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">TextRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FastAPI.html#TextRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.TextRequest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.TextRequest.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#FastAPI.TextRequest.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="FastAPI.TextRequest.text">
+<span class="sig-name descname"><span class="pre">text</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#FastAPI.TextRequest.text" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="FastAPI.get_fingerspell_tokens">
+<span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">get_fingerspell_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/FastAPI.html#get_fingerspell_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.get_fingerspell_tokens" title="Link to this definition"></a></dt>
+<dd><p>Splits a word into PJM fingerspelling tokens (handles digraphs and diacritics).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>word</strong> (<em>str</em>) – Word to split into fingerspelling tokens.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of PJM fingerspelling tokens.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="FastAPI.load_available_animations">
+<span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">load_available_animations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/FastAPI.html#load_available_animations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.load_available_animations" title="Link to this definition"></a></dt>
+<dd><p>Loads available animation names from a JSON index file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Set of available animation names converted to uppercase.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>set[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="FastAPI.map_gloss_to_animation">
+<span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">map_gloss_to_animation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gloss_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#FastAPI.GlossItem" title="FastAPI.GlossItem"><span class="pre">GlossItem</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentence_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#FastAPI.AnimationItem" title="FastAPI.AnimationItem"><span class="pre">AnimationItem</span></a></span></span><a class="reference internal" href="_modules/FastAPI.html#map_gloss_to_animation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.map_gloss_to_animation" title="Link to this definition"></a></dt>
+<dd><p>Maps a gloss item to an animation name by uppercasing it, removing Polish characters, and keeping its metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gloss_item</strong> (<a class="reference internal" href="#FastAPI.GlossItem" title="FastAPI.GlossItem"><em>GlossItem</em></a>) – Gloss item containing the gloss text and metadata.</p></li>
+<li><p><strong>sentence_type</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Type of the sentence or clause, for example “statement” or “question”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Animation item prepared for the frontend or UE animation system.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#FastAPI.AnimationItem" title="FastAPI.AnimationItem">AnimationItem</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="FastAPI.remove_polish_chars">
+<span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">remove_polish_chars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/FastAPI.html#remove_polish_chars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.remove_polish_chars" title="Link to this definition"></a></dt>
+<dd><p>Removes Polish diacritical marks from text to match animation file names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Text that may contain Polish diacritical characters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Text without Polish diacritical marks.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="FastAPI.resource_path">
+<span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">resource_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relative_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="_modules/FastAPI.html#resource_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.resource_path" title="Link to this definition"></a></dt>
+<dd><p>Returns the absolute path to a resource file in development or PyInstaller build.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>relative_path</strong> (<em>str</em>) – Relative path to the resource file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Absolute path to the requested resource file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="FastAPI.root">
+<span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">root</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/FastAPI.html#root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.root" title="Link to this definition"></a></dt>
+<dd><p>Checks if the PJM Translator API is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Health-check response with a confirmation message.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="FastAPI.split_pjm_numbers">
+<span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">split_pjm_numbers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gloss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/FastAPI.html#split_pjm_numbers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.split_pjm_numbers" title="Link to this definition"></a></dt>
+<dd><p>Splits numbers 21-59 into tens and units (e.g., ‘34’ -&gt; [‘30’, ‘4’]).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>gloss</strong> (<em>str</em>) – Gloss value that may represent a number.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List containing the original gloss or split number parts.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="FastAPI.translate_text_to_animations">
+<span class="sig-prename descclassname"><span class="pre">FastAPI.</span></span><span class="sig-name descname"><span class="pre">translate_text_to_animations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#FastAPI.TextRequest" title="FastAPI.TextRequest"><span class="pre">TextRequest</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/FastAPI.html#translate_text_to_animations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FastAPI.translate_text_to_animations" title="Link to this definition"></a></dt>
+<dd><p>Translates Polish text into PJM animation items, including number splitting and fingerspelling fallback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<a class="reference internal" href="#FastAPI.TextRequest" title="FastAPI.TextRequest"><em>TextRequest</em></a>) – Request body containing the Polish text to translate.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of animation items generated from the input text.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="#FastAPI.AnimationItem" title="FastAPI.AnimationItem">AnimationItem</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, PJM_team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
