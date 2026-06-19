@@ -10,7 +10,15 @@ import sys
 from nlp_engine import process_polish_text
 
 def resource_path(relative_path: str) -> Path:
-    """Returns the absolute path to a resource file in development or PyInstaller build."""
+    """
+    Returns the absolute path to a resource file in development or PyInstaller build.
+    
+    Args:
+        relative_path (str): Relative path to the resource file.
+
+    Returns:
+        Path: Absolute path to the requested resource file.
+    """
     if hasattr(sys, "_MEIPASS"):
         return Path(sys._MEIPASS) / relative_path
     return Path(__file__).resolve().parent / relative_path
@@ -20,7 +28,12 @@ ANIMATIONS_INDEX = resource_path("available_animations.json")
 app = FastAPI(title="PJM Translator API")
 
 def load_available_animations() -> set[str]:
-    """Loads available animation names from a JSON index file."""
+    """
+    Loads available animation names from a JSON index file.
+    
+    Returns:
+        set[str]: Set of available animation names converted to uppercase.
+    """
     if not ANIMATIONS_INDEX.exists():
         return set()
 
@@ -63,7 +76,15 @@ class TextRequest(BaseModel):
     text: str
 
 def remove_polish_chars(text: str) -> str:
-    """Removes Polish diacritical marks from text to match animation file names."""
+    """
+    Removes Polish diacritical marks from text to match animation file names.
+    
+    Args:
+        text (str): Text that may contain Polish diacritical characters.
+
+    Returns:
+        str: Text without Polish diacritical marks.
+    """
     text = unicodedata.normalize('NFKD', text)
     # Remove diacritical marks (accents) to get base characters (normalize returns the base character and its accent)
     text = "".join(c for c in text if not unicodedata.combining(c))
@@ -86,7 +107,15 @@ PJM_DIACRITICS = {
 }
 
 def get_fingerspell_tokens(word: str) -> List[str]:
-    """Splits a word into PJM fingerspelling tokens (handles digraphs and diacritics)."""
+    """
+    Splits a word into PJM fingerspelling tokens (handles digraphs and diacritics).
+    
+    Args:
+        word (str): Word to split into fingerspelling tokens.
+
+    Returns:
+        List[str]: List of PJM fingerspelling tokens.
+    """
     word = word.upper()
     tokens = []
     i = 0
@@ -103,7 +132,15 @@ def get_fingerspell_tokens(word: str) -> List[str]:
     return tokens
 
 def split_pjm_numbers(gloss: str) -> List[str]:
-    """Splits numbers 21-59 into tens and units (e.g., '34' -> ['30', '4'])."""
+    """
+    Splits numbers 21-59 into tens and units (e.g., '34' -> ['30', '4']).
+    
+    Args:
+        gloss (str): Gloss value that may represent a number.
+
+    Returns:
+        List[str]: List containing the original gloss or split number parts.
+    """
     if gloss.isdigit():
         val = int(gloss)
         # Check if the number is between 21 and 59, and is not a round ten (30, 40, 50)
@@ -112,7 +149,16 @@ def split_pjm_numbers(gloss: str) -> List[str]:
     return [gloss]
 
 def map_gloss_to_animation(gloss_item: GlossItem, sentence_type: Optional[str] = None) -> AnimationItem:
-    """Maps a gloss item to an animation name by uppercasing it, removing Polish characters, and keeping its metadata."""
+    """
+    Maps a gloss item to an animation name by uppercasing it, removing Polish characters, and keeping its metadata.
+    
+    Args:
+        gloss_item (GlossItem): Gloss item containing the gloss text and metadata.
+        sentence_type (Optional[str]): Type of the sentence or clause, for example "statement" or "question".
+
+    Returns:
+        AnimationItem: Animation item prepared for the frontend or UE animation system.
+    """
     gloss = gloss_item.gloss.upper()
     animation_name = remove_polish_chars(gloss)
 
@@ -128,13 +174,26 @@ def map_gloss_to_animation(gloss_item: GlossItem, sentence_type: Optional[str] =
 
 @app.get("/")
 def root():
-    """Checks if the PJM Translator API is running."""
+    """
+    Checks if the PJM Translator API is running.
+    
+    Returns:
+        dict[str, str]: Health-check response with a confirmation message.
+    """
     return {"message": "PJM Translator API works"}
 
 # Main endpoint for translating text to animations
 @app.post("/translate", response_model=List[AnimationItem])
 def translate_text_to_animations(request: TextRequest):
-    """Translates Polish text into PJM animation items, including number splitting and fingerspelling fallback."""
+    """
+    Translates Polish text into PJM animation items, including number splitting and fingerspelling fallback.
+    
+    Args:
+        request (TextRequest): Request body containing the Polish text to translate.
+
+    Returns:
+        List[AnimationItem]: List of animation items generated from the input text.
+    """
     try:
         # Polish text to structured gloss data
         raw_gloss_data = process_polish_text(request.text)

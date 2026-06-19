@@ -11,7 +11,15 @@ warnings.filterwarnings("ignore")
 logging.getLogger('stanza').setLevel(logging.ERROR)
 
 def resource_path(relative_path: str) -> Path:
-    """Returns the absolute path to a resource file in development or PyInstaller build."""
+    """
+    Returns the absolute path to a resource file in development or PyInstaller build.
+    
+    Args:
+        relative_path (str): Relative path to the resource file.
+
+    Returns:
+        Path: Absolute path to the requested resource file.
+    """
     if hasattr(sys, "_MEIPASS"):
         return Path(sys._MEIPASS) / relative_path
     return Path(__file__).resolve().parent / relative_path
@@ -57,7 +65,15 @@ QUESTION_PATTERNS = [
 CLAUSE_DEPS = {"root", "conj", "advcl", "ccomp", "parataxis", "acl:relcl"}
 
 def preprocess_text(text: str) -> str:
-    """Encode exceptions and multi-word expressions to safe tokens before processing"""
+    """
+    Encode exceptions and multi-word expressions to safe tokens before processing
+    
+    Args:
+        text (str): Input Polish text.
+
+    Returns:
+        str: Text with selected multi-word expressions replaced by safe tokens.
+    """
     
     for phrase, safe_token in MULTI_WORD_TO_SAFE.items():
         pattern = re.compile(r'\b' + phrase + r'\b', re.IGNORECASE)
@@ -65,7 +81,15 @@ def preprocess_text(text: str) -> str:
     return text
 
 def is_question(sentence):
-    """Determines if a sentence is a question"""
+    """
+    Determines if a sentence is a question
+    
+    Args:
+        sentence (Span): Sentence span produced by the NLP parser.
+
+    Returns:
+        bool: True if the sentence is classified as a question, otherwise False.
+    """
 
     # check if sentence ends with a question mark
     if sentence.text.strip().endswith("?"):
@@ -91,7 +115,15 @@ def is_question(sentence):
     return False
 
 def is_negative(sentence):
-    """Determines if a sentence is a negation"""
+    """
+    Determines if a sentence is a negation
+    
+    Args:
+        sentence (Span): Sentence span produced by the NLP parser.
+
+    Returns:
+        bool: True if the sentence contains negation, otherwise False.
+    """
 
     for token in sentence:
         if token.lemma_.lower() == "nie":
@@ -104,7 +136,15 @@ def is_negative(sentence):
     return False
 
 def classify_sentence(sentence):
-    """Determines the sentence type"""
+    """
+    Determines the sentence type
+    
+    Args:
+        sentence (Span): Sentence span produced by the NLP parser.
+
+    Returns:
+        str: Sentence type. Possible values are "question", "exclamation", "negation", or "statement".
+    """
 
     if is_question(sentence):
         return "question"
@@ -116,7 +156,15 @@ def classify_sentence(sentence):
         return "statement"
     
 def get_tense(token):
-    """Determines the tense of a token"""
+    """
+    Determines the tense of a token
+    
+    Args:
+        token (Token): Token produced by the NLP parser.
+
+    Returns:
+        str: Tense value. Possible values are "past", "future", or "present".
+    """
 
     if "Past" in token.morph.get("Tense", []):
         return "past"
@@ -125,7 +173,16 @@ def get_tense(token):
     return "present"
 
 def infer_subject_from_verb(token):
-    """Recover hidden Polish subject from verb morphology."""
+    """
+    Recover hidden Polish subject from verb morphology.
+    
+    Args:
+        token (Optional[Token]): Verb or auxiliary token carrying person and number information.
+
+    Returns:
+        Optional[dict[str, str]]: Dictionary with inferred subject data, or None
+        if the subject cannot be inferred.
+    """
 
     if token is None:
         return None
@@ -154,12 +211,28 @@ def infer_subject_from_verb(token):
     }
 
 def get_clause_subtree_tokens(token):
-    """Gets all words that belong to the same clause as the given token."""
+    """
+    Gets all words that belong to the same clause as the given token.
+    
+    Args:
+        token (Token): Clause root token.
+
+    Returns:
+        list[Token]: Tokens from the clause subtree sorted by their position in the sentence.
+    """
     return sorted(list(token.subtree), key=lambda t: t.i)
 
 
 def get_finite_controller(token):
-    """Finds the finite verb or auxiliary that carries grammatical person/number information for the clause."""
+    """
+    Finds the finite verb or auxiliary that carries grammatical person/number information for the clause.
+    
+    Args:
+        token (Token): Clause root token.
+
+    Returns:
+        Optional[Token]: Finite verb or auxiliary token, or None if no suitable token is found.
+    """
 
     candidates = []
 
@@ -180,7 +253,15 @@ def get_finite_controller(token):
     return candidates[0]
 
 def has_dative_experiencer(token):
-    """Detect dative experiencers to avoid incorrect third-person subject inference."""
+    """
+    Detect dative experiencers to avoid incorrect third-person subject inference.
+    
+    Args:
+        token (Token): Clause root token.
+
+    Returns:
+        bool: True if a dative experiencer is found, otherwise False.
+    """
     for tok in token.subtree:
         if tok.lemma_.lower() in ("ja", "ty", "my", "wy"):
             if "Dat" in tok.morph.get("Case", []):
@@ -189,7 +270,15 @@ def has_dative_experiencer(token):
     return False
 
 def is_clause_root(token):
-    """Determines if a token is a clause root"""
+    """
+    Determines if a token is a clause root
+    
+    Args:
+        token (Token): Token to check.
+
+    Returns:
+        bool: True if the token should be treated as a clause root, otherwise False.
+    """
 
     if token.dep_ == "root":
         return True
@@ -207,12 +296,28 @@ def is_clause_root(token):
     return False
 
 def split_into_clauses(sentence):
-    """Split a sentence into clauses based on dependency parsing"""
+    """
+    Split a sentence into clauses based on dependency parsing
+    
+    Args:
+        sentence (Span): Sentence span produced by the NLP parser.
+
+    Returns:
+        list[Token]: List of tokens identified as clause roots.
+    """
 
     return [token for token in sentence if is_clause_root(token)]
 
 def get_clause_tokens(root):
-    """Collect tokens belonging only to the clause headed by the given root"""
+    """
+    Collect tokens belonging only to the clause headed by the given root
+    
+    Args:
+        root (Token): Root token of the clause.
+
+    Returns:
+        list[Token]: Tokens belonging to the clause, sorted by their original position.
+    """
 
     tokens = []
     for tok in root.subtree:
@@ -237,7 +342,20 @@ def get_clause_tokens(root):
     return sorted(tokens, key=lambda t: t.i)
 
 def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers, question_words):
-    """Recursively collect subjects, objects, adverbials, and predicate modifiers for a given clause root"""
+    """
+    Recursively collect subjects, objects, adverbials, and predicate modifiers for a given clause root
+    
+    Args:
+        token (Token): Clause root or token whose children should be analyzed.
+        subjects (list[dict[str, Any]]): List where detected subject glosses are stored.
+        objects (list[dict[str, Any]]): List where detected object glosses are stored.
+        adverbials (list[dict[str, Any]]): List where detected adverbial glosses are stored.
+        predicate_modifiers (list[dict[str, Any]]): List where predicate modifier glosses are stored.
+        question_words (list[dict[str, Any]]): List where detected question word glosses are stored.
+
+    Returns:
+        None
+    """
 
     for child in token.children:
         if child.is_punct or child.pos_ in ("ADP", "CCONJ", "SCONJ", "PART"):
@@ -278,7 +396,17 @@ def collect_dependents(token, subjects, objects, adverbials, predicate_modifiers
             collect_dependents(child, subjects, objects, adverbials, predicate_modifiers, question_words)
 
 def build_clause_pjm(token, clause_type):
-    """Build the PJM gloss sequence for a clause based on its root and dependents"""
+    """
+    Build the PJM gloss sequence for a clause based on its root and dependents
+    
+    Args:
+        token (Token): Root token of the clause.
+        clause_type (str): Type of the clause, for example "statement", "question",
+            "negation", or "exclamation".
+
+    Returns:
+        list[dict[str, Any]]: Ordered PJM gloss sequence for the clause.
+    """
 
     subjects = []
     objects = []
@@ -339,7 +467,16 @@ def build_clause_pjm(token, clause_type):
     return clause_pjm
 
 def parse_token_for_json(token):
-    """Determines if the token should be a sign or spelled out, and checks for plurals"""
+    """
+    Determines if the token should be a sign or spelled out, and checks for plurals
+    
+    Args:
+        token (Token): Token produced by the NLP parser.
+
+    Returns:
+        dict[str, Any]: JSON-compatible gloss item containing fields such as
+        "type", "gloss", "letters", "is_negated", or "is_plural".
+    """
 
     if token.pos_ == "NUM":
         return {"type": "sign", "gloss": token.text.upper()}
@@ -376,7 +513,17 @@ def parse_token_for_json(token):
     return token_data
 
 def get_noun_phrase(head_token, question_words=None):
-    """Gets the head word and all its modifiers"""
+    """
+    Gets the head word and all its modifiers
+    
+    Args:
+        head_token (Token): Head token of the noun phrase.
+        question_words (Optional[list[dict[str, Any]]]): Optional list where detected
+            question words are stored.
+
+    Returns:
+        list[dict[str, Any]]: PJM gloss items representing the noun phrase.
+    """
 
     numbers = []
     after_head = []
@@ -406,7 +553,16 @@ def get_noun_phrase(head_token, question_words=None):
     return numbers + [parse_token_for_json(head_token)] + after_head
 
 def extract_negated_base_form(token):
-    """Detect negated adjectives like 'niezadowolony', 'niemiły'."""
+    """
+    Detect negated adjectives like 'niezadowolony', 'niemiły'.
+    
+    Args:
+        token (Token): Token to analyze.
+
+    Returns:
+        tuple[str, bool]: A tuple containing the extracted base form in uppercase
+        and a boolean value indicating whether lexical negation was detected.
+    """
 
     if token.pos_ != "ADJ":
         return token.lemma_.upper(), False
@@ -425,7 +581,16 @@ def extract_negated_base_form(token):
     return token.lemma_.upper(), False
 
 def process_polish_text(text: str) -> dict:
-    """Main function to process Polish text and return structured data for PJM translation"""
+    """
+    Main function to process Polish text and return structured data for PJM translation
+    
+    Args:
+        text (str): Polish text to process.
+
+    Returns:
+        dict[str, Any]: Dictionary containing the processed text and a list of
+        clauses with their sentence types and PJM gloss sequences.
+    """
 
     text = preprocess_text(text)
     
