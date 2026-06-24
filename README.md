@@ -81,3 +81,29 @@ Główna konfiguracja zachowań modelu znajduje się na samej górze pliku nlp_e
 Front end projektu text-to-PJM obsługujący aplikację odpowiedzialną za komunikację z modułem lematyzacji oraz wyświetlanie animacji realizowanej na awatarach (Omar i Vivien) w środowisku Unreal Engine.
 
 ---
+## Installation
+
+The latest release of the application can be downloaded using the links below.
+
+### Windows
+
+**Download installer:**  
+[Download for Windows](https://drive.google.com/file/d/1Al-_PQf6m-j9aPttNQWy3rcC8bqMlgHS/view?usp=sharing)
+
+### Linux
+
+**Download AppImage:**  
+[Download for Linux](https://drive.google.com/drive/folders/1DkOJ5ywBLLBAPPKxBfNYxOwf3fHJuwm0?usp=sharing)
+
+### Installation steps
+
+#### Windows
+1. Download the installer.
+2. Run the `.exe` file.
+3. Follow the installation instructions.
+4. Launch the application.
+
+#### Linux
+1. Download the `.AppImage` file.
+2. Make the file executable.
+3. Launch the application.
